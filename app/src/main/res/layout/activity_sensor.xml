@@ -46,6 +46,14 @@
                 android:text="" />
 
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/commandView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            android:textSize="32sp" />
+
     </FrameLayout>
 
 </FrameLayout>

@@ -5,21 +5,30 @@ import android.annotation.SuppressLint;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowInsets;
 
 import com.example.driversschool.databinding.ActivitySensorBinding;
 
+import java.util.List;
+
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
+ * We can use this activity for the actual game //Lars
  */
-public class SensorActivity extends AppCompatActivity {
+public class SensorActivity extends AppCompatActivity implements SensorEventListener {
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -61,6 +70,10 @@ public class SensorActivity extends AppCompatActivity {
         }
     };
     private View mControlsView;
+
+    private SensorManager sensorManager;
+    private Sensor rotationSensor;
+
     private final Runnable mShowPart2Runnable = new Runnable() {
         @Override
         public void run() {
@@ -127,6 +140,12 @@ public class SensorActivity extends AppCompatActivity {
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
         binding.dummyButton.setOnTouchListener(mDelayHideTouchListener);
+
+        //get sensors
+        this.sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        this.rotationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR);
+        List<Sensor> deviceSensors = sensorManager.getSensorList(Sensor.TYPE_ALL);
+        Log.d("sensor", String.valueOf(this.rotationSensor));
     }
 
     @Override
@@ -184,5 +203,30 @@ public class SensorActivity extends AppCompatActivity {
     private void delayedHide(int delayMillis) {
         mHideHandler.removeCallbacks(mHideRunnable);
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        Float rotX = sensorEvent.values[0];
+        Float rotY = sensorEvent.values[1];
+        Float rotZ = sensorEvent.values[2];
+        Log.d("RotationX", "X: " + String.format("%.2f", rotX) + " Y: " + String.format("%.2f", rotY) + " Z: " + String.format("%.2f", rotZ));
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        sensorManager.unregisterListener(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        sensorManager.registerListener(this, rotationSensor, SensorManager.SENSOR_DELAY_NORMAL);
     }
 }
