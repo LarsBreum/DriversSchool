@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">DriversSchool</string>
     <string name="title_activity_sensor">SensorActivity</string>
-    <string name="dummy_button">Dummy Button</string>
+    <string name="button_text">Get Started</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello DriversSchool!</string>
 </resources>

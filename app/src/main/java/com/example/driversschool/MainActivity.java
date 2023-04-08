@@ -1,14 +1,31 @@
 package com.example.driversschool;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
+
+    private NavController navController;
+    private Button getStartedButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        this.navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        this.getStartedButton = (Button)findViewById(R.id.get_started_button);
+        getStartedButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                navController.navigate(R.id.action_mainFragment_to_sensorActivity);
+            }
+        });
+
     }
 }
