@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowInsets;
+import android.widget.TextView;
 
 import com.example.driversschool.databinding.ActivitySensorBinding;
 
@@ -72,7 +73,8 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
     private View mControlsView;
 
     private SensorManager sensorManager;
-    private Sensor rotationSensor;
+    private Sensor sensor;
+    private TextView commandView;
 
     private final Runnable mShowPart2Runnable = new Runnable() {
         @Override
@@ -143,9 +145,10 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
 
         //get sensors
         this.sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        this.rotationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR);
+        this.sensor = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
         List<Sensor> deviceSensors = sensorManager.getSensorList(Sensor.TYPE_ALL);
-        Log.d("sensor", String.valueOf(this.rotationSensor));
+        Log.d("sensor", String.valueOf(this.sensor));
+        this.commandView = (TextView) findViewById(R.id.commandView);
     }
 
     @Override
@@ -205,12 +208,34 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
 
+    /**
+     * Understands what the player is doing based on the cars rotation.
+     * @param rotx (x * sin(theta/2))
+     * @param rotY (y * sin(theta/2))
+     * @param rotZ (z * sin(theta/2))
+     *
+     * Explanation of rotation:
+     * if rotX AND rotY is close to 0, the phone is flat on the table
+     * if rotZ is close to 0, the phone is face down
+     * if rotX AND rotZ is close to .5 AND rotY is close to -.05 the phone is held upright in portrait mode
+     *
+     *
+     */
+    private void interepretDriving(Float rotX, Float rotY, Float rotZ) {
+        if((rotX > 0.4 && rotX < 0.6) && (rotY < -0.4 && rotY > -0.6) && (rotZ < -0.4 && rotZ > -0.6)) { //This is an upright phone in portrait mode
+            commandView.setText("You're not driving - please go!");
+        } else {
+            commandView.setText("Stuff is happening");
+        }
+    }
+
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-        Float rotX = sensorEvent.values[0];
-        Float rotY = sensorEvent.values[1];
-        Float rotZ = sensorEvent.values[2];
-        Log.d("RotationX", "X: " + String.format("%.2f", rotX) + " Y: " + String.format("%.2f", rotY) + " Z: " + String.format("%.2f", rotZ));
+        Float accX = sensorEvent.values[0];
+        Float accY = sensorEvent.values[1];
+        Float accZ = sensorEvent.values[2];
+        Log.d("acc", "X: " + String.format("%.2f", accX) + " Y: " + String.format("%.2f", accY) + " Z: " + String.format("%.2f", accZ));
+        interepretDriving(accX, accY, accZ);
     }
 
     @Override
@@ -227,6 +252,6 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
     @Override
     protected void onResume() {
         super.onResume();
-        sensorManager.registerListener(this, rotationSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
     }
 }
