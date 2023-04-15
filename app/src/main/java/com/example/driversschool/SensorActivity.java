@@ -209,23 +209,19 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
     }
 
     /**
-     * Understands what the player is doing based on the cars rotation.
-     * @param rotx (x * sin(theta/2))
-     * @param rotY (y * sin(theta/2))
-     * @param rotZ (z * sin(theta/2))
-     *
-     * Explanation of rotation:
-     * if rotX AND rotY is close to 0, the phone is flat on the table
-     * if rotZ is close to 0, the phone is face down
-     * if rotX AND rotZ is close to .5 AND rotY is close to -.05 the phone is held upright in portrait mode
-     *
-     *
+     * Tries to intrepret the driving
+     * @param accX
+     * @param accY
+     * @param accZ
+     * if accX is positive the phone is moving torwards being held horisontal, top of phone to the left. Opposite is true as well
+     * if accY is positive, the phone is moving torwards being vertical
+     * if accZ is positive the phone is moving towards being horisontal, screen up.
      */
-    private void interepretDriving(Float rotX, Float rotY, Float rotZ) {
-        if((rotX > 0.4 && rotX < 0.6) && (rotY < -0.4 && rotY > -0.6) && (rotZ < -0.4 && rotZ > -0.6)) { //This is an upright phone in portrait mode
-            commandView.setText("You're not driving - please go!");
+    private void interepretDriving(Float accX, Float accY, Float accZ) {
+        if(accX > 0.3) {
+            commandView.setText("Turning left");
         } else {
-            commandView.setText("Stuff is happening");
+            commandView.setText("You're not driving");
         }
     }
 
