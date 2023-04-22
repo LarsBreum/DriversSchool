@@ -1,10 +1,6 @@
 package com.example.driversschool;
 
 import android.annotation.SuppressLint;
-
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -14,11 +10,18 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Vibrator;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowInsets;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.driversschool.databinding.ActivitySensorBinding;
 
@@ -75,6 +78,8 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
     private SensorManager sensorManager;
     private Sensor sensor;
     private TextView commandView;
+    private int blinkDirection; //-1 = left, 0 = noBlink, 1 = right
+    private Button startCarButton;
 
     private final Runnable mShowPart2Runnable = new Runnable() {
         @Override
@@ -129,6 +134,17 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
         mVisible = true;
         mControlsView = binding.fullscreenContentControls;
         mContentView = binding.fullscreenContent;
+        this.blinkDirection = 0;
+        this.startCarButton = findViewById(R.id.startCarButton);
+        Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+
+        startCarButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(SensorActivity.this, "Car started", Toast.LENGTH_SHORT).show();
+                vibrator.vibrate(1000);
+            }
+        });
 
         // Set up the user interaction to manually show or hide the system UI.
         mContentView.setOnClickListener(new View.OnClickListener() {
@@ -145,7 +161,7 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
 
         //get sensors
         this.sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        this.sensor = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+        this.sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         List<Sensor> deviceSensors = sensorManager.getSensorList(Sensor.TYPE_ALL);
         Log.d("sensor", String.valueOf(this.sensor));
         this.commandView = (TextView) findViewById(R.id.commandView);
@@ -218,9 +234,16 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
      * if accZ is positive the phone is moving towards being horisontal, screen up.
      */
     private void interepretDriving(Float accX, Float accY, Float accZ) {
-        if(accX > 0.3) {
+        if(accY < -4) {
             commandView.setText("Turning left");
-        } else {
+        } else if(accY > 4 ) {
+            commandView.setText("Turning right");
+        } else if (accX > 8.5) {
+            commandView.setText("You're braking/reversing");
+        } else if (accX < 5) {
+            commandView.setText("You're driving forward!");
+        }
+        else {
             commandView.setText("You're not driving");
         }
     }
@@ -249,5 +272,41 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
     protected void onResume() {
         super.onResume();
         sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (blinkDirection == 1) {
+            if(keyCode == KeyEvent.KEYCODE_VOLUME_DOWN){
+                Toast.makeText(this, "Not Blinking", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+            else if(keyCode == KeyEvent.KEYCODE_VOLUME_UP){
+                Toast.makeText(this, "Blinking Left", Toast.LENGTH_SHORT).show();
+                blinkDirection = -1;
+                return true;
+            }
+        } else if (blinkDirection == -1) {
+            if(keyCode == KeyEvent.KEYCODE_VOLUME_DOWN){
+                Toast.makeText(this, "Blinking right", Toast.LENGTH_SHORT).show();
+                blinkDirection = 1;
+                return true;
+            } else if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+                Toast.makeText(this, "Not Blinking", Toast.LENGTH_SHORT).show();
+                blinkDirection = 0;
+                return true;
+            }
+        } else {
+            if(keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+                Toast.makeText(this, "Blinking right", Toast.LENGTH_SHORT).show();
+                blinkDirection = 1;
+                return true;
+            } else if(keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+                Toast.makeText(this, "Blinking left", Toast.LENGTH_SHORT).show();
+                blinkDirection = -1;
+                return true;
+            }
+        }
+        return true; //stops the default event
     }
 }
