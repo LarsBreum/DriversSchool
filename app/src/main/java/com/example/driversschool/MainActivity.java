@@ -1,5 +1,6 @@
 package com.example.driversschool;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -23,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
         getStartedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                navController.navigate(R.id.action_mainFragment_to_gameActivity);
+                startActivity(new Intent(MainActivity.this, GameActivity.class));
             }
         });
 
