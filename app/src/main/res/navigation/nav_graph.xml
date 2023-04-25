@@ -18,5 +18,12 @@
         <action
             android:id="@+id/action_mainFragment_to_sensorActivity"
             app:destination="@id/sensorActivity" />
+        <action
+            android:id="@+id/action_mainFragment_to_gameActivity"
+            app:destination="@id/gameActivity" />
     </fragment>
+    <activity
+        android:id="@+id/gameActivity"
+        android:name="com.example.driversschool.GameActivity"
+        android:label="GameActivity" />
 </navigation>
