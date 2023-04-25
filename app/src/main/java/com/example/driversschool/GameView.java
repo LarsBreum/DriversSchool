@@ -5,6 +5,7 @@ import android.graphics.Paint;
 import android.util.Log;
 import android.view.SurfaceView;
 
+
 public class GameView extends SurfaceView implements Runnable {
 
     private Thread thread;
@@ -24,13 +25,14 @@ public class GameView extends SurfaceView implements Runnable {
         this.screenY = screenY;
         this.activity = activity;
 
+
         background = new Background(screenX, screenY, getResources());
 
         this.paint = new Paint();
         paint.setTextSize(128);
         //paint.setColor(Color.white);
 
-
+        this.player = new Car(getResources(), getContext());
     }
 
     @Override
@@ -46,20 +48,22 @@ public class GameView extends SurfaceView implements Runnable {
 
     private void update() {
 
+        Log.d("acc", "X: " + String.format("%.2f", activity.getAccData()[0]) + " Y: " + String.format("%.2f", activity.getAccData()[1]) + " Z: " + String.format("%.2f", activity.getAccData()[2]));
         //Log.d("Update", "Update function"); //Works
 
     }
 
     private void draw() {
 
-        //Log.d("Draw ", "Draw method");
+        //Log.d("Draw ", "Draw method")
 
         if (getHolder().getSurface().isValid()) {
-            Log.d("Draw", "draw method()"); //does not work
             Canvas canvas = getHolder().lockCanvas();
-            canvas.drawBitmap(player.getCar(), 100, 100, paint);
-            getHolder().unlockCanvasAndPost(canvas);
+            canvas.drawBitmap(background.background, 0, 0, paint);
 
+            canvas.drawBitmap(player.getCar(), 100, 100, paint);
+
+            getHolder().unlockCanvasAndPost(canvas);
         }
 
     }
@@ -86,5 +90,8 @@ public class GameView extends SurfaceView implements Runnable {
             throw new RuntimeException(e);
         }
     }
+
+
+
 
 }
