@@ -2,7 +2,6 @@ package com.example.driversschool;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.util.Log;
 import android.view.SurfaceView;
 
 
@@ -17,6 +16,7 @@ public class GameView extends SurfaceView implements Runnable {
     private Paint paint;
 
     private GameActivity activity;
+
 
     public GameView(GameActivity activity, int screenX, int screenY) {
         super(activity);
@@ -33,6 +33,7 @@ public class GameView extends SurfaceView implements Runnable {
         //paint.setColor(Color.white);
 
         this.player = new Car(getResources(), getContext());
+
     }
 
     @Override
@@ -48,8 +49,12 @@ public class GameView extends SurfaceView implements Runnable {
 
     private void update() {
 
-        Log.d("acc", "X: " + String.format("%.2f", activity.getAccData()[0]) + " Y: " + String.format("%.2f", activity.getAccData()[1]) + " Z: " + String.format("%.2f", activity.getAccData()[2]));
+        float[] accData = activity.getAccData();
+        movePlayer(accData[0], accData[1], accData[2]);
+
+        //Log.d("acc", "X: " + String.format("%.2f", activity.getAccData()[0]) + " Y: " + String.format("%.2f", activity.getAccData()[1]) + " Z: " + String.format("%.2f", activity.getAccData()[2]));
         //Log.d("Update", "Update function"); //Works
+
 
     }
 
@@ -61,7 +66,7 @@ public class GameView extends SurfaceView implements Runnable {
             Canvas canvas = getHolder().lockCanvas();
             canvas.drawBitmap(background.background, 0, 0, paint);
 
-            canvas.drawBitmap(player.getCar(), 100, 100, paint);
+            canvas.drawBitmap(player.getCar(), player.x, player.y, paint);
 
             getHolder().unlockCanvasAndPost(canvas);
         }
@@ -88,6 +93,29 @@ public class GameView extends SurfaceView implements Runnable {
             thread.join();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private void movePlayer(Float xAcc, Float yAcc, Float zAcc) {
+
+        player.carSpeed = xAcc;
+        //player.y = (int) ((int) player.y + xAcc);
+        player.rotate(-0.1);
+
+        /*
+        Turning makes sense for yAcc +-6
+         */
+
+        if(xAcc > 8.5) {
+            //reversing
+            //Log.d("movePlayer:", "reverse");
+
+        } else if(xAcc < 5) {
+            //forward
+            //Log.d("movePlayer:", "forward");
+        } else {
+            //standing still
+          //  Log.d("movePlayer:", "no acc");
         }
     }
 

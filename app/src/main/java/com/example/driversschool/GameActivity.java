@@ -1,12 +1,15 @@
 package com.example.driversschool;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.graphics.Point;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
@@ -56,13 +59,35 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-        Float accX = sensorEvent.values[0];
-        Float accY = sensorEvent.values[1];
-        Float accZ = sensorEvent.values[2];
+        float accX = sensorEvent.values[0];
+        float accY = sensorEvent.values[1];
+        float accZ = sensorEvent.values[2];
+
+        Log.d("acc", "X: " + String.format("%.2f", accX) + " Y: " + String.format("%.2f", accY) + " Z: " + String.format("%.2f", accZ));
        // Log.d("acc", "X: " + String.format("%.2f", accX) + " Y: " + String.format("%.2f", accY) + " Z: " + String.format("%.2f", accZ));
+        //filtering away large movements (low-pass)
+        if (accX > 9.0) {
+            accX = Float.valueOf(9);
+        }
 
+        if (accX < -9) {
+            accX = Float.valueOf(-9);
+        }
+
+        if (accY > 9.0) { //turning should only be +- 6
+            accY = Float.valueOf(6);
+        }
+
+        if (accY < -9) {
+            accY = Float.valueOf(-6);
+        }
+        if (accZ > 9.0) {
+            accZ = Float.valueOf(9);
+        }
+        if (accZ < -9) {
+            accZ = Float.valueOf(-9);
+        }
         this.accData = sensorEvent.values;
-
     }
 
     @Override
@@ -72,6 +97,14 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
     public float[] getAccData() {
         return this.accData;
+    }
+
+    public static Bitmap RotateBitmap(Bitmap source, double angle) {
+        Matrix matrix = new Matrix();
+        matrix.preRotate((float) angle);
+        Bitmap rotatedBitmap = Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+        source.recycle();
+        return rotatedBitmap;
     }
 
 }
