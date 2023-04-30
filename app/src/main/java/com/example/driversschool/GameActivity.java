@@ -2,14 +2,12 @@ package com.example.driversschool;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Matrix;
 import android.graphics.Point;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
@@ -63,7 +61,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         float accY = sensorEvent.values[1];
         float accZ = sensorEvent.values[2];
 
-        Log.d("acc", "X: " + String.format("%.2f", accX) + " Y: " + String.format("%.2f", accY) + " Z: " + String.format("%.2f", accZ));
+       // Log.d("acc", "X: " + String.format("%.2f", accX) + " Y: " + String.format("%.2f", accY) + " Z: " + String.format("%.2f", accZ));
        // Log.d("acc", "X: " + String.format("%.2f", accX) + " Y: " + String.format("%.2f", accY) + " Z: " + String.format("%.2f", accZ));
         //filtering away large movements (low-pass)
         if (accX > 9.0) {
@@ -99,12 +97,10 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         return this.accData;
     }
 
-    public static Bitmap RotateBitmap(Bitmap source, double angle) {
-        Matrix matrix = new Matrix();
-        matrix.preRotate((float) angle);
-        Bitmap rotatedBitmap = Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
-        source.recycle();
-        return rotatedBitmap;
+    public static void RotateBitmap(Bitmap source, double angle, int w, int h) {
+        //Matrix matrix = new Matrix();
+        //matrix.preRotate((float) angle, w/2, h/2);
+
     }
 
 }
