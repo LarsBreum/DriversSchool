@@ -25,28 +25,29 @@ public class Background {
         this.x = 0;
         this.y = 0;
 
-
-
         background = BitmapFactory.decodeResource(res, R.drawable.level1);
         background = Bitmap.createScaledBitmap(background, background.getWidth()/2, background.getHeight()/2, false);
 
     }
 
-
+    public void rotate(Matrix matrix, float angle) {
+        this.rotation = (this.rotation - (int)angle)%360;
+        matrix.setRotate(this.rotation);
+        Bitmap rotatedBitmap = Bitmap.createBitmap(this.background, 0,0, this.background.getWidth(), this.background.getHeight(),matrix,true);
+        Bitmap orgBitmap = this.background;
+        this.background = rotatedBitmap;
+        orgBitmap.recycle();
+    }
 
     public void draw(Matrix matrix, Canvas canvas, Paint paint) {
         // rotate around own axis: https://stackoverflow.com/questions/27004655/drawbitmap-how-can-you-set-coordinates-and-use-a-matrix
         matrix.reset();
 
-        float centerX = this.x + this.background.getWidth()/2;
-        float centerY = this.y + this.background.getHeight()/10;
-
         // Log.d("msg:", "X: " + this.x + " Y: " + this.y);
 
-        matrix.postTranslate(-screenX/2, -screenY/2);
         matrix.postRotate(this.rotation); //this.rotation+calcAngleSpeed()
         // Log.d("Cords", String.valueOf(this.x) + " " + String.valueOf((this.y)));
-        matrix.postTranslate(this.x, this.y);
+        matrix.postTranslate(this.x+screenX/2, this.y+screenY/2);
 
         canvas.drawBitmap(this.background, matrix, paint);
 
@@ -54,7 +55,9 @@ public class Background {
     }
 
 
-    public void moveBackground(float xAcc, float yAcc, float zAcc, double carSpeed) {
-        this.rotation = this.rotation + (int)yAcc;
+    public void moveBackground(float xAcc, float yAcc, float zAcc, double carSpeed, Matrix matrix) {
+        this.rotation = this.rotation - (int)yAcc/2;
+       // this.rotate(matrix);
+        this.y += (int) xAcc;
     }
 }

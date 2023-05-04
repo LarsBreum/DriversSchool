@@ -36,7 +36,7 @@ public class GameView extends SurfaceView implements Runnable {
         paint.setTextSize(128);
         //paint.setColor(Color.white);
 
-        this.player = new Car(getResources(), getContext());
+        this.player = new Car(getResources(), getContext(), screenX, screenY);
 
     }
 
@@ -52,6 +52,7 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     private void update() {
+        Log.d("Screen:", String.valueOf(screenX) + " " + String.valueOf(screenY));
 
         float[] accData = activity.getAccData();
         movePlayer(accData[0], accData[1], accData[2]);
@@ -75,8 +76,8 @@ public class GameView extends SurfaceView implements Runnable {
       //      canvas.drawColor(Color.BLACK);
 
 
-            //canvas.drawBitmap(background.background, background.x, background.y, paint);
-            background.draw(matrix, canvas, paint);
+            canvas.drawBitmap(background.background, background.x, background.y, paint);
+            //background.draw(matrix, canvas, paint);
             player.draw(matrix, canvas, paint);
 
             getHolder().unlockCanvasAndPost(canvas);
@@ -109,13 +110,16 @@ public class GameView extends SurfaceView implements Runnable {
 
 
     private void moveBackground(float xAcc, float yAcc, float zAcc) {
-        background.moveBackground(xAcc, yAcc, zAcc, player.carSpeed);
+        //background.moveBackground(xAcc, yAcc, zAcc, player.carSpeed, this.matrix);
+        background.y -= (int) xAcc;
+        background.rotate(matrix, yAcc);
+        Log.d("Back", String.valueOf(background.rotation));
     }
 
     private void movePlayer(Float xAcc, Float yAcc, Float zAcc) {
-        Log.d("acc Data:", "xAcc: " + String.valueOf(xAcc) + " yAcc: " + String.valueOf(yAcc) + " zAcc: " + String.valueOf(zAcc));
+      //  Log.d("acc Data:", "xAcc: " + String.valueOf(xAcc) + " yAcc: " + String.valueOf(yAcc) + " zAcc: " + String.valueOf(zAcc));
        // player.setWheelAngle(yAcc);
-        player.moveCar(xAcc, yAcc, zAcc);
+        //player.moveCar(xAcc, yAcc, zAcc);
        // background.x = background.x-10;
 
         /*

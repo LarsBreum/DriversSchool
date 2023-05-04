@@ -8,11 +8,10 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.util.Log;
 
 public class Car {
-    int x = 500;
-    int y = 500;
+    int x;
+    int y;
     float rotation;
     float wheelAngle;
     int width;
@@ -22,10 +21,11 @@ public class Car {
     double carSpeedY;
     double carSpeed;
     Bitmap car;
+    int screenX, screenY;
 
 
 
-    public Car (Resources res, Context context) {
+    public Car (Resources res, Context context, int screenX, int screenY) {
 
         car = BitmapFactory.decodeResource(res, R.drawable.car);
         //this.rotate(90);
@@ -37,6 +37,11 @@ public class Car {
         this.carSpeedY = 0f;
         this.carSpeed = 0f;
         this.rotation = 0f;
+        this.x = screenX/2;
+        this.y = screenY/2;
+
+        this.screenX = screenX;
+        this.screenY = screenY;
 
         car = Bitmap.createScaledBitmap(car, width, height, false);
 
@@ -77,11 +82,11 @@ public class Car {
         //this.setRotation();
 
         this.x = this.x + (int)carSpeedX;
-        //this.y = this.y + (int)carSpeedY;
+        this.y = this.y + (int)carSpeedY;
     }
 
     private void setCarSpeed(float xAcc) {
-        Log.d("xAcc:", String.valueOf(xAcc) + " rotation: " + String.valueOf(rotation));
+        //Log.d("xAcc:", String.valueOf(xAcc) + " rotation: " + String.valueOf(rotation));
         this.carSpeedX = xAcc*Math.sin(-this.rotation);
         this.carSpeedY = xAcc*Math.cos(-this.rotation);
         this.carSpeed = Math.sqrt(Math.exp(this.carSpeedX) + Math.exp(this.carSpeedY));
@@ -99,7 +104,7 @@ public class Car {
         return (float) carSpeed*(wheelAngle);
     }
 
-    /*private void setRotation() {
+    private void setRotation() {
         float angleSpeed = calcAngleSpeed();
         if(angleSpeed != 0) {
             this.rotation = (Math.abs(this.rotation+angleSpeed)%360);
@@ -108,7 +113,7 @@ public class Car {
         }
 
        // Log.d("rot", String.valueOf(Float.valueOf(this.rotation)));
-    }*/
+    }
 
     private void setWheelAngle(Float yAcc) {
         this.wheelAngle = yAcc;
