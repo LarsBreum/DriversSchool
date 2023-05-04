@@ -3,6 +3,7 @@ package com.example.driversschool;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.SurfaceView;
 
 
@@ -53,8 +54,8 @@ public class GameView extends SurfaceView implements Runnable {
     private void update() {
 
         float[] accData = activity.getAccData();
-       // movePlayer(accData[0], accData[1], accData[2]);
-        player.rotate((float) 0.01);
+        movePlayer(accData[0], accData[1], accData[2]);
+        //player.rotate((float) 0.01);
         //Log.d("acc", "X: " + String.format("%.2f", activity.getAccData()[0]) + " Y: " + String.format("%.2f", activity.getAccData()[1]) + " Z: " + String.format("%.2f", activity.getAccData()[2]));
         //Log.d("Update", "Update function"); //Works
 
@@ -103,9 +104,9 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     private void movePlayer(Float xAcc, Float yAcc, Float zAcc) {
-
-        player.carSpeed = xAcc;
-        //player.y = (int) ((int) player.y + xAcc); //turn on for moving
+        Log.d("acc Data:", "xAcc: " + String.valueOf(xAcc) + " yAcc: " + String.valueOf(yAcc) + " zAcc: " + String.valueOf(zAcc));
+       // player.setWheelAngle(yAcc);
+        player.moveCar(xAcc, yAcc, zAcc);
         /*
         Turning makes sense for yAcc +-6
          */

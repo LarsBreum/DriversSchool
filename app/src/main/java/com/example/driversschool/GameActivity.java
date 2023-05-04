@@ -22,6 +22,8 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     private Sensor sensor;
 
     private float[] accData;
+    private float lowPass;
+    private float highPass;
 
 
     @Override
@@ -37,6 +39,8 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         this.sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
         this.accData = new float[3];
+        this.lowPass = 9f;
+        this.highPass = 1f;
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
@@ -64,28 +68,44 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
        // Log.d("acc", "X: " + String.format("%.2f", accX) + " Y: " + String.format("%.2f", accY) + " Z: " + String.format("%.2f", accZ));
        // Log.d("acc", "X: " + String.format("%.2f", accX) + " Y: " + String.format("%.2f", accY) + " Z: " + String.format("%.2f", accZ));
         //filtering away large movements (low-pass)
-        if (accX > 9.0) {
-            accX = Float.valueOf(9);
+        //filtering away small movements (high-pass). Meaning we have a bandpass
+
+        if(accX < highPass && accX > -highPass) {
+            accX = 0; // high-pass
+        } else {
+            if (accX > lowPass) {
+                accX = Float.valueOf(9);
+            }
+            if(accX < -lowPass) {
+                accX = -Float.valueOf(9);
+            }
         }
 
-        if (accX < -9) {
-            accX = Float.valueOf(-9);
+        if(accY < highPass && accY > -highPass) {
+            accY = 0; // high-pass
+        } else {
+            if (accY > lowPass) {
+                accY = Float.valueOf(9);
+            }
+            if(accY < -lowPass) {
+                accY = -Float.valueOf(9);
+            }
         }
 
-        if (accY > 9.0) { //turning should only be +- 6
-            accY = Float.valueOf(6);
+        if(accZ < highPass && accZ > -highPass) {
+            accX = 0; // high-pass
+        } else {
+            if (accZ > lowPass) {
+                accZ = Float.valueOf(9);
+            }
+            if(accZ < -lowPass) {
+                accZ = -Float.valueOf(9);
+            }
         }
 
-        if (accY < -9) {
-            accY = Float.valueOf(-6);
-        }
-        if (accZ > 9.0) {
-            accZ = Float.valueOf(9);
-        }
-        if (accZ < -9) {
-            accZ = Float.valueOf(-9);
-        }
-        this.accData = sensorEvent.values;
+        this.accData[0] = accX;
+        this.accData[1] = accY;
+        this.accData[2] = accZ;
     }
 
     @Override
