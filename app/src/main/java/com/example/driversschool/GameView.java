@@ -55,13 +55,15 @@ public class GameView extends SurfaceView implements Runnable {
 
         float[] accData = activity.getAccData();
         movePlayer(accData[0], accData[1], accData[2]);
+        moveBackground(accData[0], accData[1], accData[2]);
+
         //player.rotate((float) 0.01);
         //Log.d("acc", "X: " + String.format("%.2f", activity.getAccData()[0]) + " Y: " + String.format("%.2f", activity.getAccData()[1]) + " Z: " + String.format("%.2f", activity.getAccData()[2]));
         //Log.d("Update", "Update function"); //Works
 
-
-
     }
+
+
 
     private void draw() {
 
@@ -69,11 +71,13 @@ public class GameView extends SurfaceView implements Runnable {
 
         if (getHolder().getSurface().isValid()) {
             canvas = getHolder().lockCanvas();
-            canvas.drawBitmap(background.background, 0, 0, paint);
 
+      //      canvas.drawColor(Color.BLACK);
+
+
+            //canvas.drawBitmap(background.background, background.x, background.y, paint);
+            background.draw(matrix, canvas, paint);
             player.draw(matrix, canvas, paint);
-
-           // canvas.drawBitmap(player.getCar(), player.x, player.y, paint);
 
             getHolder().unlockCanvasAndPost(canvas);
         }
@@ -103,10 +107,17 @@ public class GameView extends SurfaceView implements Runnable {
         }
     }
 
+
+    private void moveBackground(float xAcc, float yAcc, float zAcc) {
+        background.moveBackground(xAcc, yAcc, zAcc, player.carSpeed);
+    }
+
     private void movePlayer(Float xAcc, Float yAcc, Float zAcc) {
         Log.d("acc Data:", "xAcc: " + String.valueOf(xAcc) + " yAcc: " + String.valueOf(yAcc) + " zAcc: " + String.valueOf(zAcc));
        // player.setWheelAngle(yAcc);
         player.moveCar(xAcc, yAcc, zAcc);
+       // background.x = background.x-10;
+
         /*
         Turning makes sense for yAcc +-6
          */
