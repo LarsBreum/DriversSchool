@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //Byt till levelActivity ist
-                startActivity(new Intent(MainActivity.this, GameActivity.class));
+                startActivity(new Intent(MainActivity.this, Level.class));
             }
         });
 
