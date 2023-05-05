@@ -1,5 +1,7 @@
 package com.example.driversschool;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.hardware.Sensor;
@@ -11,9 +13,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowInsets;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,6 +34,16 @@ import java.util.List;
  * We can use this activity for the actual game //Lars
  */
 public class SensorActivity extends AppCompatActivity implements SensorEventListener {
+    // Blinkers
+    private int blinkDirection;
+    private ImageView leftArrow;
+    private ImageView rightArrow;
+    private ImageView leftArrowBlink;
+    private ImageView rightArrowBlink;
+    private ObjectAnimator pulseLeftArrowBlink;
+    private ObjectAnimator pulseRightArrowBlink;
+
+
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -122,8 +138,33 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
 
         binding = ActivitySensorBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
         mVisible = true;
+
+        //Blinkers
+        this.blinkDirection = 0;
+        leftArrow = findViewById(R.id.leftArrow);
+        rightArrow = findViewById(R.id.rightArrow);
+        leftArrowBlink = findViewById(R.id.leftArrowBlink);
+        rightArrowBlink = findViewById(R.id.rightArrowBlink);
+
+
+        leftArrow.setVisibility(View.VISIBLE);
+        rightArrow.setVisibility(View.VISIBLE);
+        leftArrowBlink.setVisibility(View.GONE);
+        rightArrowBlink.setVisibility(View.GONE);
+        /*
+        pulseLeftArrowBlink = ObjectAnimator.ofFloat(leftArrowBlink,View.ALPHA, 03f );
+        pulseRightArrowBlink = ObjectAnimator.ofFloat(rightArrowBlink,View.ALPHA, 03f );
+        pulseLeftArrowBlink.setDuration(500);
+        pulseRightArrowBlink.setDuration(500);
+        pulseLeftArrowBlink.setInterpolator(new AccelerateDecelerateInterpolator());
+        pulseRightArrowBlink.setInterpolator(new AccelerateDecelerateInterpolator());
+        pulseLeftArrowBlink.setRepeatCount(ObjectAnimator.INFINITE);
+        pulseRightArrowBlink.setRepeatCount(ObjectAnimator.INFINITE);
+        pulseLeftArrowBlink.setRepeatMode(ObjectAnimator.REVERSE);
+        pulseRightArrowBlink.setRepeatMode(ObjectAnimator.REVERSE);
+         */
+
 
         // Set up the user interaction to manually show or hide the system UI.
         mContentView.setOnClickListener(new View.OnClickListener() {
@@ -220,5 +261,54 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
     protected void onResume() {
         super.onResume();
         sensorManager.registerListener(this, rotationSensor, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event){
+        if (blinkDirection == 1) {
+            if(keyCode == KeyEvent.KEYCODE_VOLUME_DOWN){
+                //Toast.makeText(this, "Not Blinking", Toast.LENGTH_SHORT).show();
+                leftArrowBlink.setVisibility(View.GONE);
+               // pulseLeftArrowBlink.start();
+                return true;
+            }
+            else if(keyCode == KeyEvent.KEYCODE_VOLUME_UP){
+               // Toast.makeText(this, "Blinking Left", Toast.LENGTH_SHORT).show();
+               leftArrowBlink.setVisibility(View.VISIBLE);
+                blinkDirection = -1;
+                //pulseLeftArrowBlink.end();
+                return true;
+            }
+        } else if (blinkDirection == -1) {
+            if(keyCode == KeyEvent.KEYCODE_VOLUME_DOWN){
+                //Toast.makeText(this, "Blinking right", Toast.LENGTH_SHORT).show();
+                rightArrowBlink.setVisibility(View.VISIBLE);
+                //pulseRightArrowBlink.start();
+                blinkDirection = 1;
+                return true;
+            } else if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+               //Toast.makeText(this, "Not Blinking", Toast.LENGTH_SHORT).show();
+                rightArrowBlink.setVisibility(View.GONE);
+                //pulseLeftArrowBlink.end();
+                blinkDirection = 0;
+                return true;
+            }
+        } else {
+            if(keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+                // Toast.makeText(this, "Blinking right", Toast.LENGTH_SHORT).show();
+                rightArrowBlink.setVisibility(View.VISIBLE);
+                //pulseRightArrowBlink.start();
+                blinkDirection = 1;
+                return true;
+            } else if(keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+                //Toast.makeText(this, "Blinking left", Toast.LENGTH_SHORT).show();
+                leftArrowBlink.setVisibility(View.VISIBLE);
+                //pulseRightArrowBlink.end();
+                blinkDirection = -1;
+                return true;
+            }
+        }
+        return true; //stops the default event
+
     }
 }

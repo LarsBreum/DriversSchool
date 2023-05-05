@@ -11,7 +11,52 @@
         android:rotation="90"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@drawable/background" />
+
+
+    <ImageView
+        android:id="@+id/rightArrow"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="112dp"
+        android:rotation="90"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ljuspil" />
+    <ImageView
+        android:id="@+id/rightArrowBlink"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="112dp"
+        android:rotation="90"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/gulpil" />
+
+    <ImageView
+        android:id="@+id/leftArrow"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginStart="244dp"
+        android:layout_marginBottom="468dp"
+        android:rotation="-90"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/ljuspil" />
+    <ImageView
+        android:id="@+id/leftArrowBlink"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginStart="244dp"
+        android:layout_marginBottom="468dp"
+        android:rotation="-90"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/gulpil" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
