@@ -34,6 +34,7 @@ public class GameView extends SurfaceView implements Runnable {
 
         this.paint = new Paint();
         paint.setTextSize(128);
+        this.canvas = new Canvas();
         //paint.setColor(Color.white);
 
         this.player = new Car(getResources(), getContext(), screenX, screenY);
@@ -52,11 +53,22 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     private void update() {
-        Log.d("Screen:", String.valueOf(screenX) + " " + String.valueOf(screenY));
+        //Log.d("Screen:", String.valueOf(screenX) + " " + String.valueOf(screenY));
 
         float[] accData = activity.getAccData();
-        movePlayer(accData[0], accData[1], accData[2]);
-        moveBackground(accData[0], accData[1], accData[2]);
+        //movePlayer(accData[0], accData[1], accData[2]);
+
+        int speedY = (int) (Math.cos(background.rotation)*accData[0]);
+        int speedX = (int) (Math.sin(background.rotation)*accData[0]);
+
+        background.y -= speedY;
+        background.x -= speedX;
+        background.rotation = (int) (background.rotation-accData[1]/2)%360;
+
+
+        Log.d("rot", "Back: " + background.rotation + " car: " + player.rotation);
+
+
 
         //player.rotate((float) 0.01);
         //Log.d("acc", "X: " + String.format("%.2f", activity.getAccData()[0]) + " Y: " + String.format("%.2f", activity.getAccData()[1]) + " Z: " + String.format("%.2f", activity.getAccData()[2]));
@@ -74,13 +86,16 @@ public class GameView extends SurfaceView implements Runnable {
             canvas = getHolder().lockCanvas();
 
       //      canvas.drawColor(Color.BLACK);
+            canvas.rotate(background.rotation, screenX/2, screenY/2);
 
 
             canvas.drawBitmap(background.background, background.x, background.y, paint);
+            canvas.drawBitmap(player.getCar(), (screenX/2)-player.getCar().getWidth()/2, (screenY/2)-player.getCar().getHeight()/2 , paint);
             //background.draw(matrix, canvas, paint);
-            player.draw(matrix, canvas, paint);
+            //player.draw(matrix, canvas, paint);
 
             getHolder().unlockCanvasAndPost(canvas);
+            invalidate();
         }
 
     }
@@ -111,8 +126,9 @@ public class GameView extends SurfaceView implements Runnable {
 
     private void moveBackground(float xAcc, float yAcc, float zAcc) {
         //background.moveBackground(xAcc, yAcc, zAcc, player.carSpeed, this.matrix);
-        background.y -= (int) xAcc;
-        background.rotate(matrix, yAcc);
+
+        /*background.rotation = (int) ((background.rotation+yAcc/2)%360);
+        background.rotate(this.canvas);*/
         Log.d("Back", String.valueOf(background.rotation));
     }
 

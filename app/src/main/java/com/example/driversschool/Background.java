@@ -22,21 +22,20 @@ public class Background {
         this.screenY = screenY;
 
         this.rotation = 0;
-        this.x = 0;
-        this.y = 0;
+        this.x = -1750;
+        this.y = -3500;
 
-        background = BitmapFactory.decodeResource(res, R.drawable.level1);
-        background = Bitmap.createScaledBitmap(background, background.getWidth()/2, background.getHeight()/2, false);
+        background = BitmapFactory.decodeResource(res, R.drawable.level2);
+       // background = Bitmap.createScaledBitmap(background, background.getWidth()/2, background.getHeight()/2, false);
 
     }
 
-    public void rotate(Matrix matrix, float angle) {
-        this.rotation = (this.rotation - (int)angle)%360;
-        matrix.setRotate(this.rotation);
-        Bitmap rotatedBitmap = Bitmap.createBitmap(this.background, 0,0, this.background.getWidth(), this.background.getHeight(),matrix,true);
-        Bitmap orgBitmap = this.background;
-        this.background = rotatedBitmap;
-        orgBitmap.recycle();
+    public void rotate(Canvas canvas) {
+
+        int centerX = this.background.getWidth()/2;
+        int centerY = this.background.getHeight()/2;
+
+        canvas.rotate((float)this.rotation, centerX, centerY);
     }
 
     public void draw(Matrix matrix, Canvas canvas, Paint paint) {
@@ -57,7 +56,6 @@ public class Background {
 
     public void moveBackground(float xAcc, float yAcc, float zAcc, double carSpeed, Matrix matrix) {
         this.rotation = this.rotation - (int)yAcc/2;
-       // this.rotate(matrix);
         this.y += (int) xAcc;
     }
 }
