@@ -55,21 +55,13 @@ public class Car {
         this.rotation = this.rotation + calcAngleSpeed(this.carSpeed, this.wheelAngle);
     }*/
 
-    public void draw(Matrix matrix, Canvas canvas, Paint paint) {
-        // rotate around own axis: https://stackoverflow.com/questions/27004655/drawbitmap-how-can-you-set-coordinates-and-use-a-matrix
-        matrix.reset();
+    public void rotate(Matrix matrix, Canvas canvas, Paint paint) {
+        Bitmap rotatedBitmap = Bitmap.createBitmap(this.car, 0,0, this.car.getWidth(), this.car.getHeight());
+        matrix.postRotate(this.rotation, this.car.getWidth() / 2, this.car.getHeight() / 2);
+        canvas.translate(rotatedBitmap.getWidth()/2, rotatedBitmap.getHeight()/2);
+        this.car = rotatedBitmap;
+        canvas.drawBitmap(rotatedBitmap, (screenX/2)-rotatedBitmap.getWidth()/2, (screenY/2)-rotatedBitmap.getHeight()/2 , paint);
 
-        float centerX = this.x + this.car.getWidth()/2;
-        float centerY = this.y + this.car.getHeight()/10;
-
-       // Log.d("msg:", "X: " + this.x + " Y: " + this.y);
-
-        matrix.postTranslate(-this.car.getWidth()/2, -this.car.getHeight()/2);
-        matrix.postRotate(this.rotation); //this.rotation+calcAngleSpeed()
-       // Log.d("Cords", String.valueOf(this.x) + " " + String.valueOf((this.y)));
-        matrix.postTranslate(this.x, this.y);
-
-        canvas.drawBitmap(this.car, matrix, paint);
     }
 
     Rect getCollsionShape() {
