@@ -58,20 +58,22 @@ public class GameView extends SurfaceView implements Runnable {
         float[] accData = activity.getAccData();
         //movePlayer(accData[0], accData[1], accData[2]);
 
-       int speedY = (int) (Math.cos(background.rotation)*accData[0]);
-       int speedX = (int) (Math.sin(background.rotation)*accData[0]);
+       double speedY = (Math.cos(Math.toRadians(background.rotation))*(-accData[0]));
+       double speedX = (Math.sin(Math.toRadians(background.rotation))*(-accData[0]));
 
         //int speedY = (int) (accData[0]);
         //int speedX = (int) (accData[0]);
 
-        background.y -= speedY;
-        background.x -= speedX;
+        background.y += speedY;
+        background.x += speedX;
+
         //background.rotation = 45;
-        background.rotation = (int) (background.rotation-accData[1])%360;
+        background.rotation = (int) (background.rotation-accData[1])%180;
         //player.rotation = (int) (accData[1]/2);
 
         Log.d("rotation:", String.valueOf(background.rotation));
-        Log.d("acc", "x: " + String.valueOf(accData[0]));
+        Log.d("acc", String.valueOf(accData[0]));
+        Log.d("speed", "x: " + String.valueOf(speedX) + " y: " + String.valueOf(speedY));
 
 
 
