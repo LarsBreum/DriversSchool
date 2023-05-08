@@ -63,6 +63,7 @@ public class GameView extends SurfaceView implements Runnable {
 
         this.player = new Car(getResources(), getContext(), screenX, screenY);
 
+
     }
 
     @Override
@@ -92,15 +93,28 @@ public class GameView extends SurfaceView implements Runnable {
 
         background.rotation = (int) (background.rotation-accData[1])%180;
 
-        // Blinka vänster, sett en timer
+        // Blinka vänster, set en timer
         if(activity.getBlinkDirection() == 1) {
             Log.d("Blinking Right", String.valueOf(activity.getBlinkDirection()));
             activity.mp.start();
-
+            rightBlinker = BitmapFactory.decodeResource(getResources(), R.drawable.arrowyellowright);
+            rightBlinker = Bitmap.createScaledBitmap(rightBlinker, rightBlinker.getWidth()/2, rightBlinker.getHeight()/2, false);
+            leftBlinker = BitmapFactory.decodeResource(getResources(), R.drawable.leftarrow);
+            leftBlinker = Bitmap.createScaledBitmap(leftBlinker, leftBlinker.getWidth()/2, leftBlinker.getHeight()/2, false);
         }else if(activity.getBlinkDirection() == -1){
             activity.mp.start();
             Log.d("Blinking Left", String.valueOf(activity.getBlinkDirection()));
+            leftBlinker = BitmapFactory.decodeResource(getResources(), R.drawable.arrowyellowleft);
+            leftBlinker = Bitmap.createScaledBitmap(leftBlinker, leftBlinker.getWidth()/2, leftBlinker.getHeight()/2, false);
+            rightBlinker = BitmapFactory.decodeResource(getResources(), R.drawable.rightarrow);
+            rightBlinker = Bitmap.createScaledBitmap(rightBlinker, rightBlinker.getWidth()/2, rightBlinker.getHeight()/2, false);
            // Toast.makeText(activity, "Blinking Left", Toast.LENGTH_SHORT).show();
+        } else {
+            activity.mp.pause();
+            leftBlinker = BitmapFactory.decodeResource(getResources(), R.drawable.leftarrow);
+            rightBlinker = BitmapFactory.decodeResource(getResources(), R.drawable.rightarrow);
+            leftBlinker = Bitmap.createScaledBitmap(leftBlinker, leftBlinker.getWidth()/2, leftBlinker.getHeight()/2, false);
+            rightBlinker = Bitmap.createScaledBitmap(rightBlinker, rightBlinker.getWidth()/2, rightBlinker.getHeight()/2, false);
         }
 
 
@@ -147,6 +161,8 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     public void resume() {
+        activity.mp.start();
+        activity.mp.pause();
         isPlaying = true;
         thread = new Thread(this);
         thread.start();
