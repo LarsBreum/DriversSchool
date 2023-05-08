@@ -17,6 +17,11 @@
             android:theme="@style/Theme.Design.NoActionBar"
             android:exported="false" />
         <activity
+            android:name=".Popup"
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.Design.NoActionBar"
+            android:exported="false" />
+        <activity
             android:name=".Level"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.Design.NoActionBar"
