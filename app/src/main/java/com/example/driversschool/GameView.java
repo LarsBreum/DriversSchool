@@ -45,8 +45,8 @@ public class GameView extends SurfaceView implements Runnable {
         /*
         Ful blinker implementering. Borde vara egen klass tycker jag
          */
-        leftBlinker = BitmapFactory.decodeResource(getResources(), R.drawable.leftarrow);
-        rightBlinker = BitmapFactory.decodeResource(getResources(), R.drawable.rightarrow);
+        leftBlinker = BitmapFactory.decodeResource(getResources(), R.drawable.arrowyellowleft);
+        rightBlinker = BitmapFactory.decodeResource(getResources(), R.drawable.arrowyellowright);
         leftBlinker = Bitmap.createScaledBitmap(leftBlinker, leftBlinker.getWidth()/2, leftBlinker.getHeight()/2, false);
         rightBlinker = Bitmap.createScaledBitmap(rightBlinker, rightBlinker.getWidth()/2, rightBlinker.getHeight()/2, false);
         this.blinkerStatus = new int[]{0, 0}; //[0,0] means no blink. [1,0] means left is blinking
@@ -77,33 +77,20 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     private void update() {
-        //Log.d("Screen:", String.valueOf(screenX) + " " + String.valueOf(screenY));
 
         float[] accData = activity.getAccData();
-        //movePlayer(accData[0], accData[1], accData[2]);
 
        double speedY = (Math.cos(Math.toRadians(background.rotation))*(-accData[0]));
        double speedX = (Math.sin(Math.toRadians(background.rotation))*(-accData[0]));
 
-        //int speedY = (int) (accData[0]);
-        //int speedX = (int) (accData[0]);
-
         background.y += speedY;
         background.x += speedX;
 
-        //background.rotation = 45;
         background.rotation = (int) (background.rotation-accData[1])%180;
-        //player.rotation = (int) (accData[1]/2);
 
         Log.d("rotation:", String.valueOf(background.rotation));
         Log.d("acc", String.valueOf(accData[0]));
         Log.d("speed", "x: " + String.valueOf(speedX) + " y: " + String.valueOf(speedY));
-
-
-
-        //player.rotate((float) 0.01);
-        //Log.d("acc", "X: " + String.format("%.2f", activity.getAccData()[0]) + " Y: " + String.format("%.2f", activity.getAccData()[1]) + " Z: " + String.format("%.2f", activity.getAccData()[2]));
-        //Log.d("Update", "Update function"); //Works
 
     }
 
@@ -116,8 +103,9 @@ public class GameView extends SurfaceView implements Runnable {
         if (getHolder().getSurface().isValid()) {
             canvas = getHolder().lockCanvas();
             canvas.drawBitmap(background.background, 0, 0, paint);
-            canvas.drawBitmap(leftBlinker, leftBlinkerX,leftBlinkerY, paint);
-            canvas.drawBitmap(rightBlinker, rightBlinkerX,rightBlinkerY,paint);
+
+            canvas.drawBitmap(leftBlinker, 0,0, paint);
+            canvas.drawBitmap(rightBlinker, 0,0,paint);
 
       //      canvas.drawColor(Color.BLACK);
             canvas.rotate(background.rotation, screenX/2, screenY/2);
