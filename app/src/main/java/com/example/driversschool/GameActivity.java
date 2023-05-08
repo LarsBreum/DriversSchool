@@ -8,6 +8,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.view.KeyEvent;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
@@ -22,6 +23,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     private float[] accData;
     private float lowPass;
     private float highPass;
+    private int blinkDirection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,8 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         this.accData = new float[3];
         this.lowPass = 9f;
         this.highPass = 1f;
+
+        this.blinkDirection = 0;
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
@@ -120,6 +124,45 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         //Matrix matrix = new Matrix();
         //matrix.preRotate((float) angle, w/2, h/2);
 
+    }
+
+    public int getBlinkDirection() {
+        return blinkDirection;
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        if (blinkDirection == 1) {
+            if(keyCode == KeyEvent.KEYCODE_VOLUME_DOWN){
+                blinkDirection = 0;
+                return true;
+            }
+            else if(keyCode == KeyEvent.KEYCODE_VOLUME_UP){
+                blinkDirection = -1;
+                return true;
+            }
+
+        } else if (blinkDirection == -1) {
+            if(keyCode == KeyEvent.KEYCODE_VOLUME_DOWN){
+                blinkDirection = 1;
+                return true;
+
+            } else if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+                blinkDirection = 0;
+                return true;
+            }
+        } else {
+            if(keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+                blinkDirection = 1;
+                return true;
+
+            } else if(keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+                blinkDirection = -1;
+                return true;
+            }
+        }
+        return true; //stops the default event
     }
 
 }

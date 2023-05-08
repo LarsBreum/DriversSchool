@@ -47,9 +47,8 @@ public class GameView extends SurfaceView implements Runnable {
          */
         leftBlinker = BitmapFactory.decodeResource(getResources(), R.drawable.leftarrow);
         rightBlinker = BitmapFactory.decodeResource(getResources(), R.drawable.rightarrow);
-        leftBlinker = Bitmap.createScaledBitmap(leftBlinker, leftBlinker.getWidth(), leftBlinker.getHeight(), false);
-        rightBlinker = Bitmap.createScaledBitmap(rightBlinker, rightBlinker.getWidth(), rightBlinker.getHeight(), false);
-        this.blinkerStatus = new int[]{0, 0}; //[0,0] means no blink. [1,0] means left is blinking
+        leftBlinker = Bitmap.createScaledBitmap(leftBlinker, leftBlinker.getWidth()/2, leftBlinker.getHeight()/2, false);
+        rightBlinker = Bitmap.createScaledBitmap(rightBlinker, rightBlinker.getWidth()/2, rightBlinker.getHeight()/2, false);
         rightBlinkerX = screenX-rightBlinker.getWidth();
         rightBlinkerY = screenY-rightBlinker.getHeight();
         leftBlinkerX = screenX-leftBlinker.getWidth()*2;
@@ -81,12 +80,7 @@ public class GameView extends SurfaceView implements Runnable {
      */ 
 
     private void update() {
-        Log.d("Screen:", String.valueOf(screenX) + " " + String.valueOf(screenY));
-        Log.d("leftblinkerposY", String.valueOf(leftBlinkerX));
-        Log.d("leftblinkerposX", String.valueOf(leftBlinkerY));
-        Log.d("rightblinkerposY", String.valueOf(rightBlinkerX));
-        Log.d("rightblinkerpos", String.valueOf(rightBlinkerY));
-        
+
         float[] accData = activity.getAccData();
 
        double speedY = (Math.cos(Math.toRadians(background.rotation))*(-accData[0]));
@@ -97,9 +91,14 @@ public class GameView extends SurfaceView implements Runnable {
 
         background.rotation = (int) (background.rotation-accData[1])%180;
 
-        Log.d("rotation:", String.valueOf(background.rotation));
-        Log.d("acc", String.valueOf(accData[0]));
-        Log.d("speed", "x: " + String.valueOf(speedX) + " y: " + String.valueOf(speedY));
+        // Blinka vänster, sett en timer
+        if(activity.getBlinkDirection() == 1) {
+            Log.d("Blinking Right", String.valueOf(activity.getBlinkDirection()));
+        }else if(activity.getBlinkDirection() == -1){
+            Log.d("Blinking Left", String.valueOf(activity.getBlinkDirection()));
+           // Toast.makeText(activity, "Blinking Left", Toast.LENGTH_SHORT).show();
+        }
+
 
     }
 
@@ -115,13 +114,13 @@ public class GameView extends SurfaceView implements Runnable {
         if (getHolder().getSurface().isValid()) {
             canvas = getHolder().lockCanvas();
             canvas.drawBitmap(background.background, 0, 0, paint);
-
-            canvas.drawBitmap(leftBlinker, 0,0, paint);
-            canvas.drawBitmap(rightBlinker, 0,0,paint);
-
       //      canvas.drawColor(Color.BLACK);
             canvas.rotate(background.rotation, screenX/2, screenY/2);
             canvas.drawBitmap(background.background, background.x, background.y, paint);
+
+            canvas.drawBitmap(leftBlinker, leftBlinkerX,leftBlinkerY, paint);
+            canvas.drawBitmap(rightBlinker, rightBlinkerX,rightBlinkerY,paint);
+
             //player.rotate(matrix, canvas, paint);
             canvas.drawBitmap(player.getCar(), (screenX/2)-player.getCar().getWidth()/2, (screenY/2)-player.getCar().getHeight()/2 , paint);
             //background.draw(matrix, canvas, paint);
