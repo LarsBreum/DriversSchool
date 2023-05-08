@@ -43,7 +43,7 @@
         android:layout_marginStart="180dp"
         android:layout_marginBottom="64dp"
         android:background="#EBE1FB"
-        android:text="Luta mobilen åt höger eller vänster för att svänga! Du blinkar genom att trycka på volymknapparna. Gasa och bromsa genom att luta mobilen frammåt eller bakåt"
+        android:text="Luta mobilen åt höger eller vänster för att svänga! Du blinkar genom att trycka på volymknapparna. Gasa och bromsa genom att luta mobilen frammåt eller bakåt. Höj ljudet och lyssna på din körskolelärare"
         android:textAlignment="center"
         android:textColor="#673AB7"
         android:textSize="34sp"
