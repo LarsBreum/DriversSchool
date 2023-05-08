@@ -30,15 +30,12 @@ public class Level  extends AppCompatActivity {
             public void onClick(View view) {
                 startActivity(new Intent(Level.this, GameActivity.class));
             }
-
         });
 
         imageButton2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 startActivity(new Intent(Level.this, Profil.class));
             }
-
         });}
 }

@@ -7,15 +7,6 @@
     android:background="#AB96CF"
     tools:context=".Level">
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="488dp"
-        android:layout_marginBottom="125dp"
-        android:text="Locked"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/easy"
@@ -37,7 +28,7 @@
         android:layout_marginStart="356dp"
         android:layout_marginTop="200dp"
         android:backgroundTint="#673AB7"
-        android:text="Medium"
+        android:text="Medium locked"
         android:textColor="#000000"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -50,7 +41,7 @@
         android:layout_marginStart="608dp"
         android:layout_marginTop="200dp"
         android:backgroundTint="#673AB7"
-        android:text="Hard"
+        android:text="Hard locked"
         android:textColor="#000000"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -78,5 +69,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:srcCompat="@tools:sample/avatars" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
