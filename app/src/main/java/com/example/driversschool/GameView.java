@@ -1,5 +1,7 @@
 package com.example.driversschool;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
@@ -21,6 +23,14 @@ public class GameView extends SurfaceView implements Runnable {
     private GameActivity activity;
     Matrix matrix;
 
+    Bitmap leftBlinker;
+    private int leftBlinkerX;
+    private int leftBlinkerY;
+    private int rightBlinkerX;
+    private int rightBlinkerY;
+    Bitmap rightBlinker;
+    int[] blinkerStatus;
+
 
     public GameView(GameActivity activity, int screenX, int screenY) {
         super(activity);
@@ -31,6 +41,20 @@ public class GameView extends SurfaceView implements Runnable {
         this.matrix = new Matrix();
 
         background = new Background(screenX, screenY, getResources());
+
+        /*
+        Ful blinker implementering. Borde vara egen klass tycker jag
+         */
+        leftBlinker = BitmapFactory.decodeResource(getResources(), R.drawable.leftarrow);
+        rightBlinker = BitmapFactory.decodeResource(getResources(), R.drawable.rightarrow);
+        leftBlinker = Bitmap.createScaledBitmap(leftBlinker, leftBlinker.getWidth()/2, leftBlinker.getHeight()/2, false);
+        rightBlinker = Bitmap.createScaledBitmap(rightBlinker, rightBlinker.getWidth()/2, rightBlinker.getHeight()/2, false);
+        this.blinkerStatus = new int[]{0, 0}; //[0,0] means no blink. [1,0] means left is blinking
+        rightBlinkerX = screenX-rightBlinker.getWidth();
+        rightBlinkerY = screenY-rightBlinker.getHeight();
+        leftBlinkerX = screenX-leftBlinker.getWidth()*2;
+        leftBlinkerY = screenY-leftBlinker.getHeight();
+
 
         this.paint = new Paint();
         paint.setTextSize(128);
@@ -91,6 +115,9 @@ public class GameView extends SurfaceView implements Runnable {
 
         if (getHolder().getSurface().isValid()) {
             canvas = getHolder().lockCanvas();
+            canvas.drawBitmap(background.background, 0, 0, paint);
+            canvas.drawBitmap(leftBlinker, leftBlinkerX,leftBlinkerY, paint);
+            canvas.drawBitmap(rightBlinker, rightBlinkerX,rightBlinkerY,paint);
 
       //      canvas.drawColor(Color.BLACK);
             canvas.rotate(background.rotation, screenX/2, screenY/2);

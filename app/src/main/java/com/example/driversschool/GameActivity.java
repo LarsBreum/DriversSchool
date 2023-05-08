@@ -17,14 +17,11 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
     private GameView gameView;
     private RelativeLayout containerRL;
-
     private SensorManager sensorManager;
     private Sensor sensor;
-
     private float[] accData;
     private float lowPass;
     private float highPass;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
