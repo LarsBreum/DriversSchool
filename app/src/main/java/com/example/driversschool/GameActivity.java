@@ -23,7 +23,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     private float[] accData;
     private float lowPass;
     private float highPass;
-    private MediaPlayer mp;
+    public MediaPlayer carSound;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +44,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         this.highPass = 1f;
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        this.mp = MediaPlayer.create(this, R.raw.CarEngine);
+        this.carSound = MediaPlayer.create(this, R.raw.carengine);
 
     }
 
