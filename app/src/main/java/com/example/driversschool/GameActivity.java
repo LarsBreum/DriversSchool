@@ -24,6 +24,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     private float lowPass;
     private float highPass;
     private int blinkDirection;
+    private Mediaplayer mp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +47,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         this.blinkDirection = 0;
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        this.mp = MediaPlayer.create(this, R.raw.blinker);
 
     }
 

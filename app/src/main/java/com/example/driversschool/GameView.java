@@ -20,6 +20,7 @@ public class GameView extends SurfaceView implements Runnable {
     private Float screenRatioX, screenRatioY;
     private Paint paint;
 
+
     private GameActivity activity;
     Matrix matrix;
 
@@ -94,7 +95,10 @@ public class GameView extends SurfaceView implements Runnable {
         // Blinka vänster, sett en timer
         if(activity.getBlinkDirection() == 1) {
             Log.d("Blinking Right", String.valueOf(activity.getBlinkDirection()));
+            activity.mp.start();
+
         }else if(activity.getBlinkDirection() == -1){
+            activity.mp.start();
             Log.d("Blinking Left", String.valueOf(activity.getBlinkDirection()));
            // Toast.makeText(activity, "Blinking Left", Toast.LENGTH_SHORT).show();
         }
