@@ -45,16 +45,16 @@ public class GameView extends SurfaceView implements Runnable {
         /*
         Ful blinker implementering. Borde vara egen klass tycker jag
          */
-        leftBlinker = BitmapFactory.decodeResource(getResources(), R.drawable.arrowyellowleft);
-        rightBlinker = BitmapFactory.decodeResource(getResources(), R.drawable.arrowyellowright);
-        leftBlinker = Bitmap.createScaledBitmap(leftBlinker, leftBlinker.getWidth()/2, leftBlinker.getHeight()/2, false);
-        rightBlinker = Bitmap.createScaledBitmap(rightBlinker, rightBlinker.getWidth()/2, rightBlinker.getHeight()/2, false);
+        leftBlinker = BitmapFactory.decodeResource(getResources(), R.drawable.leftarrow);
+        rightBlinker = BitmapFactory.decodeResource(getResources(), R.drawable.rightarrow);
+        leftBlinker = Bitmap.createScaledBitmap(leftBlinker, leftBlinker.getWidth(), leftBlinker.getHeight(), false);
+        rightBlinker = Bitmap.createScaledBitmap(rightBlinker, rightBlinker.getWidth(), rightBlinker.getHeight(), false);
         this.blinkerStatus = new int[]{0, 0}; //[0,0] means no blink. [1,0] means left is blinking
         rightBlinkerX = screenX-rightBlinker.getWidth();
         rightBlinkerY = screenY-rightBlinker.getHeight();
         leftBlinkerX = screenX-leftBlinker.getWidth()*2;
         leftBlinkerY = screenY-leftBlinker.getHeight();
-
+        
 
         this.paint = new Paint();
         paint.setTextSize(128);
@@ -76,8 +76,17 @@ public class GameView extends SurfaceView implements Runnable {
 
     }
 
-    private void update() {
+    /* 
+     * All movementis implemented here
+     */ 
 
+    private void update() {
+        Log.d("Screen:", String.valueOf(screenX) + " " + String.valueOf(screenY));
+        Log.d("leftblinkerposY", String.valueOf(leftBlinkerX));
+        Log.d("leftblinkerposX", String.valueOf(leftBlinkerY));
+        Log.d("rightblinkerposY", String.valueOf(rightBlinkerX));
+        Log.d("rightblinkerpos", String.valueOf(rightBlinkerY));
+        
         float[] accData = activity.getAccData();
 
        double speedY = (Math.cos(Math.toRadians(background.rotation))*(-accData[0]));
@@ -96,6 +105,9 @@ public class GameView extends SurfaceView implements Runnable {
 
 
 
+    /*
+     * Used for drawing the gamingboard
+     */
     private void draw() {
 
         //Log.d("Draw ", "Draw method")
@@ -118,6 +130,8 @@ public class GameView extends SurfaceView implements Runnable {
             getHolder().unlockCanvasAndPost(canvas);
             invalidate();
         }
+
+        
 
     }
 
