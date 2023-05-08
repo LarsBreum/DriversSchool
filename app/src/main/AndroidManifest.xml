@@ -27,7 +27,6 @@
             android:theme="@style/Theme.Design.NoActionBar"
             android:exported="false" />
         <activity
-            android:name=".SensorActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="false"
             android:label="@string/title_activity_sensor"

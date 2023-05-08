@@ -121,8 +121,6 @@ public class GameView extends SurfaceView implements Runnable {
 
       //      canvas.drawColor(Color.BLACK);
             canvas.rotate(background.rotation, screenX/2, screenY/2);
-
-
             canvas.drawBitmap(background.background, background.x, background.y, paint);
             //player.rotate(matrix, canvas, paint);
             canvas.drawBitmap(player.getCar(), (screenX/2)-player.getCar().getWidth()/2, (screenY/2)-player.getCar().getHeight()/2 , paint);
