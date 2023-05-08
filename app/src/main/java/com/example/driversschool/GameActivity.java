@@ -6,6 +6,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
@@ -24,7 +25,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     private float lowPass;
     private float highPass;
     private int blinkDirection;
-    private Mediaplayer mp;
+    public MediaPlayer mp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
