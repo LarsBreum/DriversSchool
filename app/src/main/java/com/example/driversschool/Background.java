@@ -23,7 +23,7 @@ public class Background {
 
         this.rotation = 0;
         this.x = -1750;
-        this.y = -3500;
+        this.y = -4000;
 
         background = BitmapFactory.decodeResource(res, R.drawable.level1);
         //background = Bitmap.createScaledBitmap(background, background.getWidth()/2, background.getHeight()/2, false);
