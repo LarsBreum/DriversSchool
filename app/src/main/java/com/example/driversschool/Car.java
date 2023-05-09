@@ -8,6 +8,7 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.util.Log;
 
 public class Car {
     int x;
@@ -56,12 +57,12 @@ public class Car {
     }*/
 
     public void rotate(Matrix matrix, Canvas canvas, Paint paint) {
-        Bitmap rotatedBitmap = Bitmap.createBitmap(this.car, 0,0, this.car.getWidth(), this.car.getHeight());
-        matrix.postRotate(this.rotation, this.car.getWidth() / 2, this.car.getHeight() / 2);
-        canvas.translate(rotatedBitmap.getWidth()/2, rotatedBitmap.getHeight()/2);
+        Log.d("rotation", String.valueOf(this.rotation));
+        matrix.setRotate(this.rotation);
+        Bitmap rotatedBitmap = Bitmap.createBitmap(this.car, 0,0, this.car.getWidth(), this.car.getHeight(), matrix, true);
+        this.car.recycle();
         this.car = rotatedBitmap;
-        canvas.drawBitmap(rotatedBitmap, (screenX/2)-rotatedBitmap.getWidth()/2, (screenY/2)-rotatedBitmap.getHeight()/2 , paint);
-
+        canvas.drawBitmap(this.car, x-car.getWidth()/2, y-car.getHeight()/2, paint);
     }
 
     Rect getCollsionShape() {

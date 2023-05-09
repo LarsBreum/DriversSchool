@@ -13,6 +13,7 @@ public class GameView extends SurfaceView implements Runnable {
 
     private Thread thread;
     private Canvas canvas;
+    private Canvas carCanvas;
     private Boolean isPlaying;
     private Background background;
     private Car player;
@@ -59,6 +60,7 @@ public class GameView extends SurfaceView implements Runnable {
         this.paint = new Paint();
         paint.setTextSize(128);
         this.canvas = new Canvas();
+        this.carCanvas = new Canvas();
         //paint.setColor(Color.white);
 
         this.player = new Car(getResources(), getContext(), screenX, screenY);
@@ -91,7 +93,8 @@ public class GameView extends SurfaceView implements Runnable {
         background.y += speedY;
         background.x += speedX;
 
-        background.rotation = (int) (background.rotation-accData[1])%180;
+        background.rotation = (int) (background.rotation-accData[1])%360;
+        player.rotation = (int) (player.rotation-accData[1])%360;
 
         // Blinka vänster, set en timer
         if(activity.getBlinkDirection() == 1) {
@@ -130,29 +133,23 @@ public class GameView extends SurfaceView implements Runnable {
      */
     private void draw() {
 
-        //Log.d("Draw ", "Draw method")
-
         if (getHolder().getSurface().isValid()) {
             canvas = getHolder().lockCanvas();
             canvas.drawBitmap(background.background, 0, 0, paint);
-      //      canvas.drawColor(Color.BLACK);
             canvas.rotate(background.rotation, screenX/2, screenY/2);
             canvas.drawBitmap(background.background, background.x, background.y, paint);
 
             canvas.drawBitmap(leftBlinker, leftBlinkerX,leftBlinkerY, paint);
             canvas.drawBitmap(rightBlinker, rightBlinkerX,rightBlinkerY,paint);
-
-            //player.rotate(matrix, canvas, paint);
-            canvas.drawBitmap(player.getCar(), (screenX/2)-player.getCar().getWidth()/2, (screenY/2)-player.getCar().getHeight()/2 , paint);
-            //background.draw(matrix, canvas, paint);
-            //player.draw(matrix, canvas, paint);
-
             getHolder().unlockCanvasAndPost(canvas);
+
+            carCanvas = getHolder().lockCanvas();
+            carCanvas.drawBitmap(player.getCar(), (screenX/2)-player.getCar().getWidth()/2, (screenY/2)-player.getCar().getHeight()/2, paint);
+            //canvas.drawBitmap(player.getCar(), (screenX/2)-player.getCar().getWidth()/2, (screenY/2)-player.getCar().getHeight()/2 , paint);
+            getHolder().unlockCanvasAndPost(carCanvas);
+
             invalidate();
         }
-
-        
-
     }
 
     private void sleep() {

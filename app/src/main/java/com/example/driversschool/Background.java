@@ -4,8 +4,6 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Matrix;
-import android.graphics.Paint;
 
 public class Background {
 
@@ -38,24 +36,5 @@ public class Background {
         canvas.rotate((float)this.rotation, centerX, centerY);
     }
 
-    public void draw(Matrix matrix, Canvas canvas, Paint paint) {
-        // rotate around own axis: https://stackoverflow.com/questions/27004655/drawbitmap-how-can-you-set-coordinates-and-use-a-matrix
-        matrix.reset();
 
-        // Log.d("msg:", "X: " + this.x + " Y: " + this.y);
-
-        matrix.postRotate(this.rotation); //this.rotation+calcAngleSpeed()
-        // Log.d("Cords", String.valueOf(this.x) + " " + String.valueOf((this.y)));
-        matrix.postTranslate(this.x+screenX/2, this.y+screenY/2);
-
-        canvas.drawBitmap(this.background, matrix, paint);
-
-        // canvas.drawBitmap(this.car, matrix, paint);
-    }
-
-
-    public void moveBackground(float xAcc, float yAcc, float zAcc, double carSpeed, Matrix matrix) {
-        this.rotation = this.rotation - (int)yAcc/2;
-        this.y += (int) xAcc;
-    }
 }
