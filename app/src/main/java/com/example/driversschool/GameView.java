@@ -99,8 +99,6 @@ public class GameView extends SurfaceView implements Runnable {
         Log.d("acc", String.valueOf(accData[0]));
         Log.d("speed", "x: " + String.valueOf(speedX) + " y: " + String.valueOf(speedY));
 
-
-
         //player.rotate((float) 0.01);
         //Log.d("acc", "X: " + String.format("%.2f", activity.getAccData()[0]) + " Y: " + String.format("%.2f", activity.getAccData()[1]) + " Z: " + String.format("%.2f", activity.getAccData()[2]));
         //Log.d("Update", "Update function"); //Works
@@ -144,6 +142,7 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     public void resume() {
+        activity.carSound.start();
         isPlaying = true;
         thread = new Thread(this);
         thread.start();

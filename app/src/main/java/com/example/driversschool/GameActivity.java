@@ -6,6 +6,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
@@ -22,6 +23,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     private float[] accData;
     private float lowPass;
     private float highPass;
+    public MediaPlayer carSound;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +44,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         this.highPass = 1f;
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        this.carSound = MediaPlayer.create(this, R.raw.carengine);
 
     }
 
