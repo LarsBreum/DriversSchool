@@ -7,7 +7,6 @@
 
     <activity
         android:id="@+id/sensorActivity"
-        android:name="com.example.driversschool.SensorActivity"
         android:label="activity_sensor"
         tools:layout="@layout/activity_sensor" />
     <fragment

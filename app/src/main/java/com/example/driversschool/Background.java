@@ -25,8 +25,8 @@ public class Background {
         this.x = -1750;
         this.y = -3500;
 
-        background = BitmapFactory.decodeResource(res, R.drawable.level2);
-       // background = Bitmap.createScaledBitmap(background, background.getWidth()/2, background.getHeight()/2, false);
+        background = BitmapFactory.decodeResource(res, R.drawable.level1);
+        background = Bitmap.createScaledBitmap(background, background.getWidth()/2, background.getHeight()/2, false);
 
     }
 

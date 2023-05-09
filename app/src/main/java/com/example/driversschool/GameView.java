@@ -20,6 +20,7 @@ public class GameView extends SurfaceView implements Runnable {
     private Float screenRatioX, screenRatioY;
     private Paint paint;
 
+
     private GameActivity activity;
     Matrix matrix;
 
@@ -49,12 +50,11 @@ public class GameView extends SurfaceView implements Runnable {
         rightBlinker = BitmapFactory.decodeResource(getResources(), R.drawable.rightarrow);
         leftBlinker = Bitmap.createScaledBitmap(leftBlinker, leftBlinker.getWidth()/2, leftBlinker.getHeight()/2, false);
         rightBlinker = Bitmap.createScaledBitmap(rightBlinker, rightBlinker.getWidth()/2, rightBlinker.getHeight()/2, false);
-        this.blinkerStatus = new int[]{0, 0}; //[0,0] means no blink. [1,0] means left is blinking
         rightBlinkerX = screenX-rightBlinker.getWidth();
         rightBlinkerY = screenY-rightBlinker.getHeight();
         leftBlinkerX = screenX-leftBlinker.getWidth()*2;
         leftBlinkerY = screenY-leftBlinker.getHeight();
-
+        
 
         this.paint = new Paint();
         paint.setTextSize(128);
@@ -62,6 +62,7 @@ public class GameView extends SurfaceView implements Runnable {
         //paint.setColor(Color.white);
 
         this.player = new Car(getResources(), getContext(), screenX, screenY);
+
 
     }
 
@@ -76,28 +77,45 @@ public class GameView extends SurfaceView implements Runnable {
 
     }
 
+    /* 
+     * All movementis implemented here
+     */ 
+
     private void update() {
-        //Log.d("Screen:", String.valueOf(screenX) + " " + String.valueOf(screenY));
 
         float[] accData = activity.getAccData();
-        //movePlayer(accData[0], accData[1], accData[2]);
 
        double speedY = (Math.cos(Math.toRadians(background.rotation))*(-accData[0]));
        double speedX = (Math.sin(Math.toRadians(background.rotation))*(-accData[0]));
 
-        //int speedY = (int) (accData[0]);
-        //int speedX = (int) (accData[0]);
-
         background.y += speedY;
         background.x += speedX;
 
-        //background.rotation = 45;
         background.rotation = (int) (background.rotation-accData[1])%180;
-        //player.rotation = (int) (accData[1]/2);
 
-        Log.d("rotation:", String.valueOf(background.rotation));
-        Log.d("acc", String.valueOf(accData[0]));
-        Log.d("speed", "x: " + String.valueOf(speedX) + " y: " + String.valueOf(speedY));
+        // Blinka vänster, set en timer
+        if(activity.getBlinkDirection() == 1) {
+            Log.d("Blinking Right", String.valueOf(activity.getBlinkDirection()));
+            activity.mp.start();
+            rightBlinker = BitmapFactory.decodeResource(getResources(), R.drawable.arrowyellowright);
+            rightBlinker = Bitmap.createScaledBitmap(rightBlinker, rightBlinker.getWidth()/2, rightBlinker.getHeight()/2, false);
+            leftBlinker = BitmapFactory.decodeResource(getResources(), R.drawable.leftarrow);
+            leftBlinker = Bitmap.createScaledBitmap(leftBlinker, leftBlinker.getWidth()/2, leftBlinker.getHeight()/2, false);
+        }else if(activity.getBlinkDirection() == -1){
+            activity.mp.start();
+            Log.d("Blinking Left", String.valueOf(activity.getBlinkDirection()));
+            leftBlinker = BitmapFactory.decodeResource(getResources(), R.drawable.arrowyellowleft);
+            leftBlinker = Bitmap.createScaledBitmap(leftBlinker, leftBlinker.getWidth()/2, leftBlinker.getHeight()/2, false);
+            rightBlinker = BitmapFactory.decodeResource(getResources(), R.drawable.rightarrow);
+            rightBlinker = Bitmap.createScaledBitmap(rightBlinker, rightBlinker.getWidth()/2, rightBlinker.getHeight()/2, false);
+           // Toast.makeText(activity, "Blinking Left", Toast.LENGTH_SHORT).show();
+        } else {
+            activity.mp.pause();
+            leftBlinker = BitmapFactory.decodeResource(getResources(), R.drawable.leftarrow);
+            rightBlinker = BitmapFactory.decodeResource(getResources(), R.drawable.rightarrow);
+            leftBlinker = Bitmap.createScaledBitmap(leftBlinker, leftBlinker.getWidth()/2, leftBlinker.getHeight()/2, false);
+            rightBlinker = Bitmap.createScaledBitmap(rightBlinker, rightBlinker.getWidth()/2, rightBlinker.getHeight()/2, false);
+        }
 
         //player.rotate((float) 0.01);
         //Log.d("acc", "X: " + String.format("%.2f", activity.getAccData()[0]) + " Y: " + String.format("%.2f", activity.getAccData()[1]) + " Z: " + String.format("%.2f", activity.getAccData()[2]));
@@ -107,6 +125,9 @@ public class GameView extends SurfaceView implements Runnable {
 
 
 
+    /*
+     * Used for drawing the gamingboard
+     */
     private void draw() {
 
         //Log.d("Draw ", "Draw method")
@@ -114,14 +135,13 @@ public class GameView extends SurfaceView implements Runnable {
         if (getHolder().getSurface().isValid()) {
             canvas = getHolder().lockCanvas();
             canvas.drawBitmap(background.background, 0, 0, paint);
+      //      canvas.drawColor(Color.BLACK);
+            canvas.rotate(background.rotation, screenX/2, screenY/2);
+            canvas.drawBitmap(background.background, background.x, background.y, paint);
+
             canvas.drawBitmap(leftBlinker, leftBlinkerX,leftBlinkerY, paint);
             canvas.drawBitmap(rightBlinker, rightBlinkerX,rightBlinkerY,paint);
 
-      //      canvas.drawColor(Color.BLACK);
-            canvas.rotate(background.rotation, screenX/2, screenY/2);
-
-
-            canvas.drawBitmap(background.background, background.x, background.y, paint);
             //player.rotate(matrix, canvas, paint);
             canvas.drawBitmap(player.getCar(), (screenX/2)-player.getCar().getWidth()/2, (screenY/2)-player.getCar().getHeight()/2 , paint);
             //background.draw(matrix, canvas, paint);
@@ -130,6 +150,8 @@ public class GameView extends SurfaceView implements Runnable {
             getHolder().unlockCanvasAndPost(canvas);
             invalidate();
         }
+
+        
 
     }
 
@@ -143,6 +165,8 @@ public class GameView extends SurfaceView implements Runnable {
 
     public void resume() {
         activity.carSound.start();
+        activity.mp.start();
+        activity.mp.pause();
         isPlaying = true;
         thread = new Thread(this);
         thread.start();
