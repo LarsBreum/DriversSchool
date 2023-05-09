@@ -18,9 +18,8 @@ public class Popup  extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_popup);
 
-        this.mp = MediaPlayer.create(Popup.this, R.raw.instruktion);
+        this.mp = MediaPlayer.create(Popup.this, R.raw.instructions);
         this.cross = (Button) findViewById(R.id.cross);
-
 
         cross.setOnClickListener(new View.OnClickListener() {
             @Override

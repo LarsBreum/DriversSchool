@@ -8,46 +8,42 @@
 
     <Button
         android:id="@+id/cross"
-        android:layout_width="96dp"
-        android:layout_height="88dp"
-        android:layout_marginStart="776dp"
-        android:layout_marginBottom="292dp"
+        android:layout_width="62dp"
+        android:layout_height="62dp"
+        android:layout_marginStart="656dp"
+        android:layout_marginBottom="320dp"
         android:backgroundTint="#673AB7"
+        android:fontFamily="@font/sigmar_one"
         android:text="X"
-        android:textColor="#000000"
+        android:textColor="#FFFFFF"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="MissingConstraints" />
 
     <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="925dp"
+        android:layout_height="723dp"
+        android:focusableInTouchMode="true"
+        android:rotation="360"
+        app:srcCompat="@drawable/bakgrundpop"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="-17dp"
+        tools:layout_editor_absoluteY="-156dp" />
+
+    <ImageView
         android:id="@+id/imageView"
-        android:layout_width="1087dp"
-        android:layout_height="744dp"
+        android:layout_width="510dp"
+        android:layout_height="352dp"
+        android:layout_marginStart="200dp"
         android:focusableInTouchMode="true"
         android:rotation="360"
         android:tint="#61F3E4E4"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.831"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.603"
         app:srcCompat="@drawable/bakpop"
-        tools:ignore="MissingConstraints,UseAppTint" />
+        tools:ignore="MissingConstraints,UseAppTint"
+        tools:layout_editor_absoluteY="29dp" />
 
-    <TextView
-        android:id="@+id/text"
-        android:layout_width="597dp"
-        android:layout_height="281dp"
-        android:layout_marginStart="180dp"
-        android:layout_marginBottom="64dp"
-        android:background="#EBE1FB"
-        android:text="Luta mobilen åt höger eller vänster för att svänga! Du blinkar genom att trycka på volymknapparna. Gasa och bromsa genom att luta mobilen frammåt eller bakåt. Höj ljudet och lyssna på din körskolelärare"
-        android:textAlignment="center"
-        android:textColor="#673AB7"
-        android:textSize="34sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
