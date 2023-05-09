@@ -28,7 +28,7 @@ public class Level  extends AppCompatActivity {
         easy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(Level.this, GameActivity.class));
+                startActivity(new Intent(Level.this, Popup.class));
             }
 
         });
