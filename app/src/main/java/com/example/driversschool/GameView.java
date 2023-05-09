@@ -21,7 +21,6 @@ public class GameView extends SurfaceView implements Runnable {
     private Float screenRatioX, screenRatioY;
     private Paint paint;
 
-
     private GameActivity activity;
     Matrix matrix;
 
@@ -65,7 +64,6 @@ public class GameView extends SurfaceView implements Runnable {
 
         this.player = new Car(getResources(), getContext(), screenX, screenY);
 
-
     }
 
     @Override
@@ -80,7 +78,7 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     /* 
-     * All movementis implemented here
+     * All movements implemented here
      */ 
 
     private void update() {
@@ -92,6 +90,10 @@ public class GameView extends SurfaceView implements Runnable {
 
         background.y += speedY;
         background.x += speedX;
+
+        if(background.y > -3800) {
+
+        }
 
         background.rotation = (int) (background.rotation-accData[1])%360;
         player.rotation = (int) (player.rotation-accData[1])%360;
@@ -119,14 +121,7 @@ public class GameView extends SurfaceView implements Runnable {
             leftBlinker = Bitmap.createScaledBitmap(leftBlinker, leftBlinker.getWidth()/2, leftBlinker.getHeight()/2, false);
             rightBlinker = Bitmap.createScaledBitmap(rightBlinker, rightBlinker.getWidth()/2, rightBlinker.getHeight()/2, false);
         }
-
-        //player.rotate((float) 0.01);
-        //Log.d("acc", "X: " + String.format("%.2f", activity.getAccData()[0]) + " Y: " + String.format("%.2f", activity.getAccData()[1]) + " Z: " + String.format("%.2f", activity.getAccData()[2]));
-        //Log.d("Update", "Update function"); //Works
-
     }
-
-
 
     /*
      * Used for drawing the gamingboard
@@ -164,6 +159,7 @@ public class GameView extends SurfaceView implements Runnable {
         activity.carSound.start();
         activity.mp.start();
         activity.mp.pause();
+        activity.vibrator.vibrate(1000);
         isPlaying = true;
         thread = new Thread(this);
         thread.start();
