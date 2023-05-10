@@ -32,6 +32,13 @@ public class GameView extends SurfaceView implements Runnable {
     Bitmap rightBlinker;
     int[] blinkerStatus;
 
+    boolean phoneVibrating = false;
+    int vibrateTime = 1000;
+    private int minX;
+    private int maxX;
+    private int minY;
+    private int maxY;
+
 
     public GameView(GameActivity activity, int screenX, int screenY) {
         super(activity);
@@ -42,6 +49,9 @@ public class GameView extends SurfaceView implements Runnable {
         this.matrix = new Matrix();
 
         background = new Background(screenX, screenY, getResources());
+        minX = -1692;
+        maxY = -3420;
+
 
         /*
         Ful blinker implementering. Borde vara egen klass tycker jag
@@ -85,14 +95,33 @@ public class GameView extends SurfaceView implements Runnable {
 
         float[] accData = activity.getAccData();
 
+        Log.d("loc", String.valueOf(background.x) + " " + String.valueOf(background.y));
+
        double speedY = (Math.cos(Math.toRadians(background.rotation))*(-accData[0]));
        double speedX = (Math.sin(Math.toRadians(background.rotation))*(-accData[0]));
 
         background.y += speedY;
         background.x += speedX;
 
-        if(background.y > -3800) {
+        //Log.d("back loc", String.valueOf(minX) + " " + String.valueOf(maxX) + " " + String.valueOf(minY) + " " + String.valueOf(maxY) );
+        if((background.x < minX) && (background.y > maxY) && !phoneVibrating) {
+            //Toast.makeText(getContext(), "You hit the car!", Toast.LENGTH_SHORT).show();
+            activity.vibrator.vibrate(vibrateTime);
+            phoneVibrating = true;
+        }
 
+        if(background.x < -2000 && !phoneVibrating) { //if you drive off the road
+            //Toast.makeText(getContext(), "You drove off the road", Toast.LENGTH_SHORT).show();
+            activity.vibrator.vibrate(vibrateTime);
+            phoneVibrating = true;
+        }
+
+
+        if(vibrateTime > 0) {
+            vibrateTime -= 17;
+        } else {
+            vibrateTime = 5000;
+            phoneVibrating = false;
         }
 
         background.rotation = (int) (background.rotation-accData[1])%360;
@@ -173,40 +202,5 @@ public class GameView extends SurfaceView implements Runnable {
             throw new RuntimeException(e);
         }
     }
-
-
-    private void moveBackground(float xAcc, float yAcc, float zAcc) {
-        //background.moveBackground(xAcc, yAcc, zAcc, player.carSpeed, this.matrix);
-
-        /*background.rotation = (int) ((background.rotation+yAcc/2)%360);
-        background.rotate(this.canvas);*/
-        Log.d("Back", String.valueOf(background.rotation));
-    }
-
-    private void movePlayer(Float xAcc, Float yAcc, Float zAcc) {
-      //  Log.d("acc Data:", "xAcc: " + String.valueOf(xAcc) + " yAcc: " + String.valueOf(yAcc) + " zAcc: " + String.valueOf(zAcc));
-       // player.setWheelAngle(yAcc);
-        //player.moveCar(xAcc, yAcc, zAcc);
-       // background.x = background.x-10;
-
-        /*
-        Turning makes sense for yAcc +-6
-         */
-
-        if(xAcc > 8.5) {
-            //reversing
-            //Log.d("movePlayer:", "reverse");
-
-        } else if(xAcc < 5) {
-            //forward
-            //Log.d("movePlayer:", "forward");
-        } else {
-            //standing still
-          //  Log.d("movePlayer:", "no acc");
-        }
-    }
-
-
-
 
 }
