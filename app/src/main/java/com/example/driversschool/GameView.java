@@ -13,13 +13,13 @@ public class GameView extends SurfaceView implements Runnable {
 
     private Thread thread;
     private Canvas canvas;
+    private Canvas carCanvas;
     private Boolean isPlaying;
     private Background background;
     private Car player;
     private int screenX, screenY;
     private Float screenRatioX, screenRatioY;
     private Paint paint;
-
 
     private GameActivity activity;
     Matrix matrix;
@@ -32,6 +32,13 @@ public class GameView extends SurfaceView implements Runnable {
     Bitmap rightBlinker;
     int[] blinkerStatus;
 
+    boolean phoneVibrating = false;
+    int vibrateTime = 1000;
+    private int minX;
+    private int maxX;
+    private int minY;
+    private int maxY;
+
 
     public GameView(GameActivity activity, int screenX, int screenY) {
         super(activity);
@@ -42,6 +49,9 @@ public class GameView extends SurfaceView implements Runnable {
         this.matrix = new Matrix();
 
         background = new Background(screenX, screenY, getResources());
+        minX = -1692;
+        maxY = -3420;
+
 
         /*
         Ful blinker implementering. Borde vara egen klass tycker jag
@@ -59,10 +69,10 @@ public class GameView extends SurfaceView implements Runnable {
         this.paint = new Paint();
         paint.setTextSize(128);
         this.canvas = new Canvas();
+        this.carCanvas = new Canvas();
         //paint.setColor(Color.white);
 
         this.player = new Car(getResources(), getContext(), screenX, screenY);
-
 
     }
 
@@ -78,12 +88,14 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     /* 
-     * All movementis implemented here
+     * All movements implemented here
      */ 
 
     private void update() {
 
         float[] accData = activity.getAccData();
+
+        Log.d("loc", String.valueOf(background.x) + " " + String.valueOf(background.y));
 
        double speedY = (Math.cos(Math.toRadians(background.rotation))*(-accData[0]));
        double speedX = (Math.sin(Math.toRadians(background.rotation))*(-accData[0]));
@@ -91,7 +103,29 @@ public class GameView extends SurfaceView implements Runnable {
         background.y += speedY;
         background.x += speedX;
 
-        background.rotation = (int) (background.rotation-accData[1])%180;
+        //Log.d("back loc", String.valueOf(minX) + " " + String.valueOf(maxX) + " " + String.valueOf(minY) + " " + String.valueOf(maxY) );
+        if((background.x < minX) && (background.y > maxY) && !phoneVibrating) {
+            //Toast.makeText(getContext(), "You hit the car!", Toast.LENGTH_SHORT).show();
+            activity.vibrator.vibrate(vibrateTime);
+            phoneVibrating = true;
+        }
+
+        if(background.x < -2000 && !phoneVibrating) { //if you drive off the road
+            //Toast.makeText(getContext(), "You drove off the road", Toast.LENGTH_SHORT).show();
+            activity.vibrator.vibrate(vibrateTime);
+            phoneVibrating = true;
+        }
+
+
+        if(vibrateTime > 0) {
+            vibrateTime -= 17;
+        } else {
+            vibrateTime = 5000;
+            phoneVibrating = false;
+        }
+
+        background.rotation = (int) (background.rotation-accData[1])%360;
+        player.rotation = (int) (player.rotation-accData[1])%360;
 
         // Blinka vänster, set en timer
         if(activity.getBlinkDirection() == 1) {
@@ -116,43 +150,30 @@ public class GameView extends SurfaceView implements Runnable {
             leftBlinker = Bitmap.createScaledBitmap(leftBlinker, leftBlinker.getWidth()/2, leftBlinker.getHeight()/2, false);
             rightBlinker = Bitmap.createScaledBitmap(rightBlinker, rightBlinker.getWidth()/2, rightBlinker.getHeight()/2, false);
         }
-
-        //player.rotate((float) 0.01);
-        //Log.d("acc", "X: " + String.format("%.2f", activity.getAccData()[0]) + " Y: " + String.format("%.2f", activity.getAccData()[1]) + " Z: " + String.format("%.2f", activity.getAccData()[2]));
-        //Log.d("Update", "Update function"); //Works
-
     }
-
-
 
     /*
      * Used for drawing the gamingboard
      */
     private void draw() {
 
-        //Log.d("Draw ", "Draw method")
-
         if (getHolder().getSurface().isValid()) {
             canvas = getHolder().lockCanvas();
             canvas.drawBitmap(background.background, 0, 0, paint);
-      //      canvas.drawColor(Color.BLACK);
             canvas.rotate(background.rotation, screenX/2, screenY/2);
             canvas.drawBitmap(background.background, background.x, background.y, paint);
 
             canvas.drawBitmap(leftBlinker, leftBlinkerX,leftBlinkerY, paint);
             canvas.drawBitmap(rightBlinker, rightBlinkerX,rightBlinkerY,paint);
-
-            //player.rotate(matrix, canvas, paint);
-            canvas.drawBitmap(player.getCar(), (screenX/2)-player.getCar().getWidth()/2, (screenY/2)-player.getCar().getHeight()/2 , paint);
-            //background.draw(matrix, canvas, paint);
-            //player.draw(matrix, canvas, paint);
-
             getHolder().unlockCanvasAndPost(canvas);
+
+            carCanvas = getHolder().lockCanvas();
+            carCanvas.drawBitmap(player.getCar(), (screenX/2)-player.getCar().getWidth()/2, (screenY/2)-player.getCar().getHeight()/2, paint);
+            //canvas.drawBitmap(player.getCar(), (screenX/2)-player.getCar().getWidth()/2, (screenY/2)-player.getCar().getHeight()/2 , paint);
+            getHolder().unlockCanvasAndPost(carCanvas);
+
             invalidate();
         }
-
-        
-
     }
 
     private void sleep() {
@@ -167,6 +188,7 @@ public class GameView extends SurfaceView implements Runnable {
         activity.carSound.start();
         activity.mp.start();
         activity.mp.pause();
+        activity.vibrator.vibrate(1000);
         isPlaying = true;
         thread = new Thread(this);
         thread.start();
@@ -180,40 +202,5 @@ public class GameView extends SurfaceView implements Runnable {
             throw new RuntimeException(e);
         }
     }
-
-
-    private void moveBackground(float xAcc, float yAcc, float zAcc) {
-        //background.moveBackground(xAcc, yAcc, zAcc, player.carSpeed, this.matrix);
-
-        /*background.rotation = (int) ((background.rotation+yAcc/2)%360);
-        background.rotate(this.canvas);*/
-        Log.d("Back", String.valueOf(background.rotation));
-    }
-
-    private void movePlayer(Float xAcc, Float yAcc, Float zAcc) {
-      //  Log.d("acc Data:", "xAcc: " + String.valueOf(xAcc) + " yAcc: " + String.valueOf(yAcc) + " zAcc: " + String.valueOf(zAcc));
-       // player.setWheelAngle(yAcc);
-        //player.moveCar(xAcc, yAcc, zAcc);
-       // background.x = background.x-10;
-
-        /*
-        Turning makes sense for yAcc +-6
-         */
-
-        if(xAcc > 8.5) {
-            //reversing
-            //Log.d("movePlayer:", "reverse");
-
-        } else if(xAcc < 5) {
-            //forward
-            //Log.d("movePlayer:", "forward");
-        } else {
-            //standing still
-          //  Log.d("movePlayer:", "no acc");
-        }
-    }
-
-
-
 
 }
