@@ -11,6 +11,9 @@ Thank you for anyone that have provided Open Source code, tutorials and CC licen
 ### Car sprites
 <a href="https://www.freepik.com/free-vector/topview-parked-vehicles_1347950.htm#page=2&query=car%20sprite&position=11&from_view=search&track=robertav1_2_sidr">Image by brgfx</a> on Freepik
 
+### Stop sign
+<a href="https://www.freepik.com/free-vector/realistic-collection-warning-information-road-signs_14441079.htm#query=stop%20sign%20transparent&position=3&from_view=search&track=ais">Image by user15245033</a> on Freepik
+
 
 
 ### Blinker Sound 
