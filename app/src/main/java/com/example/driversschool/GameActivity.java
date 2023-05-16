@@ -28,6 +28,8 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     public MediaPlayer carSound;
     private int blinkDirection;
     public MediaPlayer mp;
+    public MediaPlayer winMp;
+    public MediaPlayer loseMp;
     public Vibrator vibrator;
 
     @Override
@@ -55,6 +57,8 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         this.carSound = MediaPlayer.create(this, R.raw.carengine);
         this.mp = MediaPlayer.create(this, R.raw.blinker);
+        this.winMp = MediaPlayer.create(this, R.raw.fanfar);
+        this.loseMp = MediaPlayer.create(this, R.raw.over);
 
     }
 

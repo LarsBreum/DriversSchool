@@ -1,5 +1,6 @@
 package com.example.driversschool;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -48,9 +49,10 @@ public class GameView extends SurfaceView implements Runnable {
         this.activity = activity;
         this.matrix = new Matrix();
 
+
         background = new Background(screenX, screenY, getResources());
-        minX = -1692;
-        maxY = -3420;
+        minX = -2000;
+        maxY = -2900;
 
 
         /*
@@ -97,11 +99,24 @@ public class GameView extends SurfaceView implements Runnable {
 
         Log.d("loc", String.valueOf(background.x) + " " + String.valueOf(background.y));
 
-       double speedY = (Math.cos(Math.toRadians(background.rotation))*(-accData[0]));
-       double speedX = (Math.sin(Math.toRadians(background.rotation))*(-accData[0]));
+       double speedY = (Math.cos(Math.toRadians(background.rotation))*(-accData[0]*1.4));
+       double speedX = (Math.sin(Math.toRadians(background.rotation))*(-accData[0]*1.4)); //1.1-1.4-1.0
 
         background.y += speedY;
         background.x += speedX;
+
+        /*
+        Stop for stop sign
+         */
+        if(background.y < -2900 && background.y > -3000) {
+            if(speedY == 0.0) {
+                activity.winMp.start();
+                activity.startActivity(new Intent(activity, GameCompleted.class));
+            }
+        } else if(background.y > -2700) {
+            activity.loseMp.start();
+        }
+
 
         //Log.d("back loc", String.valueOf(minX) + " " + String.valueOf(maxX) + " " + String.valueOf(minY) + " " + String.valueOf(maxY) );
         if((background.x < minX) && (background.y > maxY) && !phoneVibrating) {
@@ -124,8 +139,8 @@ public class GameView extends SurfaceView implements Runnable {
             phoneVibrating = false;
         }
 
-        background.rotation = (int) (background.rotation-accData[1])%360;
-        player.rotation = (int) (player.rotation-accData[1])%360;
+        background.rotation = (int) (background.rotation-accData[1]*0.9)%360;
+        player.rotation = (int) (player.rotation-accData[1]*0.9)%360;
 
         // Blinka vänster, set en timer
         if(activity.getBlinkDirection() == 1) {
