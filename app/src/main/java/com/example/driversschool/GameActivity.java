@@ -30,6 +30,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     public MediaPlayer mp;
     public MediaPlayer winMp;
     public MediaPlayer loseMp;
+    public MediaPlayer crashMp;
     public Vibrator vibrator;
 
     @Override
@@ -59,6 +60,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         this.mp = MediaPlayer.create(this, R.raw.blinker);
         this.winMp = MediaPlayer.create(this, R.raw.fanfar);
         this.loseMp = MediaPlayer.create(this, R.raw.over);
+        this.crashMp = MediaPlayer.create(this, R.raw.crash);
 
     }
 

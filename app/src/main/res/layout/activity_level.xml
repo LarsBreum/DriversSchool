@@ -11,13 +11,15 @@
         android:id="@+id/easy"
         android:layout_width="200dp"
         android:layout_height="100dp"
-        android:layout_marginStart="84dp"
+
         android:layout_marginTop="200dp"
+        android:layout_marginBottom="111dp"
         android:backgroundTint="#673AB7"
-        android:fontFamily="@font/sigmar_one"
         android:text="Easy"
         android:textColor="#FFFFFF"
         android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/medium"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -25,13 +27,16 @@
         android:id="@+id/medium"
         android:layout_width="200dp"
         android:layout_height="100dp"
-        android:layout_marginStart="352dp"
+
         android:layout_marginTop="200dp"
+        android:layout_marginBottom="111dp"
         android:backgroundTint="#807A8A"
-        android:fontFamily="@font/sigmar_one"
         android:text="Medium"
         android:textColor="#FFFFFF"
         android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -39,29 +44,35 @@
         android:id="@+id/hard"
         android:layout_width="200dp"
         android:layout_height="100dp"
-        android:layout_marginStart="608dp"
+
         android:layout_marginTop="200dp"
+        android:layout_marginBottom="111dp"
         android:backgroundTint="#7F7989"
-        android:fontFamily="@font/sigmar_one"
         android:text="Hard"
         android:textColor="#FFFFFF"
         android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/medium"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="236dp"
-        android:layout_marginBottom="268dp"
-        android:fontFamily="@font/sigmar_one"
+
+        android:layout_marginTop="70dp"
+        android:layout_marginBottom="281dp"
         android:text="CHOOSE YOUR LEVEL"
         android:textAlignment="center"
         android:textColor="#FFFFFF"
         android:textSize="45sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/imageButton2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
         android:id="@+id/imageButton2"

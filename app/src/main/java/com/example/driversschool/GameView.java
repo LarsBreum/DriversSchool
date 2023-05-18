@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.util.Log;
 import android.view.SurfaceView;
 
@@ -35,11 +36,7 @@ public class GameView extends SurfaceView implements Runnable {
 
     boolean phoneVibrating = false;
     int vibrateTime = 1000;
-    private int minX;
-    private int maxX;
-    private int minY;
-    private int maxY;
-
+     private Rect parkedCar;
 
     public GameView(GameActivity activity, int screenX, int screenY) {
         super(activity);
@@ -51,9 +48,6 @@ public class GameView extends SurfaceView implements Runnable {
 
 
         background = new Background(screenX, screenY, getResources());
-        minX = -2000;
-        maxY = -2900;
-
 
         /*
         Ful blinker implementering. Borde vara egen klass tycker jag
@@ -75,6 +69,7 @@ public class GameView extends SurfaceView implements Runnable {
         //paint.setColor(Color.white);
 
         this.player = new Car(getResources(), getContext(), screenX, screenY);
+        this.parkedCar = new Rect(-1773, -3338, -1773-player.getCar().getWidth(), -3338+player.getCar().getHeight());
 
     }
 
@@ -102,38 +97,45 @@ public class GameView extends SurfaceView implements Runnable {
        double speedY = (Math.cos(Math.toRadians(background.rotation))*(-accData[0]*1.4));
        double speedX = (Math.sin(Math.toRadians(background.rotation))*(-accData[0]*1.4)); //1.1-1.4-1.0
 
-        background.y += speedY;
-        background.x += speedX;
+
 
         /*
         Stop for stop sign
          */
-        if(background.y < -2900 && background.y > -3000) {
+        if(background.y < -2830 && background.y > -3050) {
             if(speedY == 0.0) {
                 activity.winMp.start();
                 activity.startActivity(new Intent(activity, GameCompleted.class));
             }
-        } else if(background.y > -2700) {
+        } else if(background.y > -2700 && (speedY != 0 || speedX != 0)) {
             activity.loseMp.start();
         }
 
-
+        //Hitting parked car
         //Log.d("back loc", String.valueOf(minX) + " " + String.valueOf(maxX) + " " + String.valueOf(minY) + " " + String.valueOf(maxY) );
-        if((background.x < minX) && (background.y > maxY) && !phoneVibrating) {
-            //Toast.makeText(getContext(), "You hit the car!", Toast.LENGTH_SHORT).show();
-            activity.vibrator.vibrate(vibrateTime);
-            phoneVibrating = true;
-        }
+        if((background.x < -1760 && background.y > -3363)) {
+            speedX = 0;
+            speedY = -3;
+            if(!phoneVibrating) {
+                activity.vibrator.vibrate(vibrateTime);
+                phoneVibrating = true;
+                activity.crashMp.start();
+            }
 
+        }
+        // Driving off the road
         if(background.x < -2000 && !phoneVibrating) { //if you drive off the road
             //Toast.makeText(getContext(), "You drove off the road", Toast.LENGTH_SHORT).show();
+            activity.vibrator.vibrate(vibrateTime);
+            phoneVibrating = true;
+        } else if(background.x > -1000 && !phoneVibrating) {
             activity.vibrator.vibrate(vibrateTime);
             phoneVibrating = true;
         }
 
 
         if(vibrateTime > 0) {
-            vibrateTime -= 17;
+            vibrateTime -= 34;
         } else {
             vibrateTime = 5000;
             phoneVibrating = false;
@@ -141,6 +143,9 @@ public class GameView extends SurfaceView implements Runnable {
 
         background.rotation = (int) (background.rotation-accData[1]*0.9)%360;
         player.rotation = (int) (player.rotation-accData[1]*0.9)%360;
+
+        background.y += speedY;
+        background.x += speedX;
 
         // Blinka vänster, set en timer
         if(activity.getBlinkDirection() == 1) {
